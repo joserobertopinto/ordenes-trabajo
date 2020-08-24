@@ -18,7 +18,8 @@
         "yiisoft/yii2": "~2.0.14",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
-        "ramosisw/yii2-material-dashboard": "dev-master"
+        "ricar2ce/yii2-material-theme": "^1.1",
+        "yidas/yii2-fontawesome": "4.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

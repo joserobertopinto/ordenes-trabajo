@@ -4,7 +4,7 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
-    'id' => 'basic',
+    'id' => 'ordenes',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -51,6 +51,16 @@ $config = [
             ],
         ],
         */
+        'assetManager' => [
+            'bundles' => [
+                'rce\material\Assets' => [
+                    'siteTitle' => 'Ordenes de Trabajo',
+                    'sidebarColor' => 'purple',
+                    'sidebarBackgroundColor' => 'white',
+                    'sidebarBackgroundImage' => 'images/background_sidebar.png'
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];
