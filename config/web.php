@@ -9,6 +9,7 @@ $config = [
     'id' => 'ordenes',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'language'=>'es', // spanish
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -66,6 +67,14 @@ $config = [
             'baseUrl' => $baseUrl, //para sacar el /web
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+        ],
+        'i18n' => [
+            'translations' => [
+                'user' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                ],
+            ],
         ],
     ],
     'params' => $params,
