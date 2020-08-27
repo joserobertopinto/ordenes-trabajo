@@ -1,0 +1,31 @@
+<?php
+return [
+		
+	'error_permiso' => 'Ud. no tiene permitido realizar esta acción. Contacte a los administradores del sistema.',
+	'pagina_no_exite' => 'La página solicitada no existe.',
+	'error_version_lock'  => '{objeto} que ha intentado modificar ha sido modificado previamente por otro usuario. Recargue la página nuevamente, revise los cambios y verifique si es necesario realizar la modificación.',
+	'Sign out' => 'Salir',
+	'Profile' => 'Perfil',
+	'About'=>'Acerca',
+	'Create'=>'Crear',
+	'btnCreate'=>'Aceptar',
+	'Update'=>'Modificar',
+	'Delete'=>'Eliminar',
+	'Cancel' => 'Cancelar',
+	'Descripcion'=>'Descripción',
+	'Circunscripcion'=>'Circunscripción',
+	'Pais' => 'País',
+	'Codigo Postal' => 'Código Postal',
+	'Codigo' => 'Código',
+	'Telefono' => 'Teléfono',
+	'Edit' => "Editar",
+	'Motivo Cambio Estado' => 'Motivo',
+	'desasignar-juez' => 'Desasignar Juez',
+	'asignar-juez' => 'Asignar Juez',
+	'finalizar' => 'Finalizar',
+	'reasignar' => 'Reasignar',
+	'volver-asignada' => 'Volver a Asignada',
+    'Rebeldia' => 'Rebeldía',
+    'Login' => 'Ingreso al Sistema',
+    'Logout' => 'Salir'
+];
