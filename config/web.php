@@ -1,7 +1,9 @@
 <?php
+use yii\web\Request;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$baseUrl = str_replace('/web', '', (new Request)->getBaseUrl());  //para sacar el /web
 
 $config = [
     'id' => 'ordenes',
@@ -15,6 +17,7 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'U-XIpclk8BwczZ1wU1bbugKrR7ECEgMY',
+            'baseUrl' => $baseUrl, //para sacar el /web
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -43,14 +46,12 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
         'assetManager' => [
             'bundles' => [
                 'rce\material\Assets' => [
@@ -60,6 +61,11 @@ $config = [
                     'sidebarBackgroundImage' => 'images/background_sidebar.png'
                 ],
             ],
+        ],
+        'urlManager' => [
+            'baseUrl' => $baseUrl, //para sacar el /web
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
         ],
     ],
     'params' => $params,
@@ -78,7 +84,7 @@ if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
 
