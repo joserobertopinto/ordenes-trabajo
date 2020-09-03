@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use app\models\Estado;
+use app\models\OrdenesTrabajo;
 
 /**
  * This is the model class for table "ordenes_trabajo.historial_estado_orden_trabajo".
@@ -30,13 +32,13 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_historial_estado_orden_trabajo', 'id_estado', 'fecha_hora', 'id_ordenes_trabajo'], 'required'],
+            [['id_estado', 'fecha_hora', 'id_ordenes_trabajo'], 'required'],
             [['id_historial_estado_orden_trabajo', 'id_estado', 'id_usuario', 'id_ordenes_trabajo'], 'string'],
             [['fecha_hora'], 'safe'],
             [['observacion'], 'string', 'max' => 512],
             [['id_historial_estado_orden_trabajo'], 'unique'],
-            [['id_estado'], 'exist', 'skipOnError' => true, 'targetClass' => OrdenesTrabajoEstado::className(), 'targetAttribute' => ['id_estado' => 'id_estado']],
-            [['id_ordenes_trabajo'], 'exist', 'skipOnError' => true, 'targetClass' => OrdenesTrabajoOrdenesTrabajo::className(), 'targetAttribute' => ['id_ordenes_trabajo' => 'id_ordenes_trabajo']],
+            [['id_estado'], 'exist', 'skipOnError' => true, 'targetClass' => Estado::className(), 'targetAttribute' => ['id_estado' => 'id_estado']],
+            [['id_ordenes_trabajo'], 'exist', 'skipOnError' => true, 'targetClass' => OrdenesTrabajo::className(), 'targetAttribute' => ['id_ordenes_trabajo' => 'id_ordenes_trabajo']],
         ];
     }
 

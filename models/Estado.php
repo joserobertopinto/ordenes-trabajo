@@ -12,6 +12,11 @@ use Yii;
  */
 class Estado extends \yii\db\ActiveRecord
 {
+    const ESTADO_BORRADOR       = '578fa5e2-8044-4b62-b4e9-e41821c658cc';   //BORRADOR
+    const ESTADO_PENDIENTE      = '9007850e-8a7b-47c5-8747-4ead8ff3e134';	//PENDIENTE
+    const ESTADO_EN_PROGRESO    = '45077e45-8a78-4b4d-9abb-c7e6c9fb3d07';	//EN PROGRESO
+    const ESTADO_FINALIZADO     = '27ab5c71-a7b4-411b-bba4-4d4a98efcfc0';	//FINALIZADO
+
     /**
      * {@inheritdoc}
      */
