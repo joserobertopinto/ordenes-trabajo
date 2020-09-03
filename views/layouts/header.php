@@ -60,16 +60,16 @@ use yii\helpers\Html;
                   </p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                  <a class="dropdown-item" href="#">Profile</a>
-                  <a class="dropdown-item" href="#">Settings</a>
+                  <!-- <a class="dropdown-item" href="#">Salir</a>
+                  <a class="dropdown-item" href="#">Settings</a> -->
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="#" style="padding: 0;">
                     <?php
                     echo Html::beginForm(['/site/logout'], 'post');
-                    // echo Html::submitButton(
-                    //     'Logout (' . //Yii::$app->user->identity->name . ')',
-                    //     ['class' => 'btn btn-link logout']
-                    // );
+                    echo Html::submitButton(
+                        Yii::t('app','Logout'),// (' . //Yii::$app->user->identity->name . ')',
+                        ['class' => 'btn btn-link logout']
+                    );
                     echo Html::endForm();
                     ?>
                   </a>

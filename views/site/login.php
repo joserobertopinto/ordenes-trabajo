@@ -7,7 +7,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = 'Login';
+$this->title =  Yii::t('app', 'Login');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
@@ -15,8 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-md-4 col-sm-6 ml-auto mr-auto"><!-- col-lg-4  -->
         <div class="card card-login card-hidden">
             <div class="card-header card-header-rose text-center"  data-background-color="orange">
-                <h4 class="card-title">Login</h4>
-                <div class="social-line">
+                <h4 class="card-title"><?= Yii::t('app', 'Login'); ?></h4>
+                <!-- <div class="social-line">
                     <a href="#" class="btn btn-just-icon btn-link btn-white">
                         <i class="fa fa-facebook-square"></i>
                     </a>
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <a href="#" class="btn btn-just-icon btn-link btn-white">
                         <i class="fa fa-google-plus"></i>
                     </a>
-                </div>
+                </div> -->
             </div>
             <?php $form = ActiveForm::begin([
                     'id' => 'login-form',
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             {input}
                         </div>
                         '
-                        ])->textInput()->label(false) ?>
+                        ])->textInput(["placeholder"=>"Usuario..."])->label(false) ?>
                   <!--   <label class="bmd-label-floating">Username</label>
                     <input type="text" class="form-control"> -->
                 </span>
@@ -61,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             {input}
                         </div>
                         '
-                        ])->passwordInput(["class"=>"form-control","placeholder"=>"Password..."]) ?>
+                        ])->passwordInput(["class"=>"form-control","placeholder"=>"Contraseña..."]) ?>
                         <!-- <input type="password" class="form-control" placeholder="Password..."> -->
                 </span>
                 <span class="bmd-form-group">
@@ -71,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </span>
             </div>
            <div class="card-footer justify-content-center">
-                <?= Html::submitButton('Login', ['class' => 'btn btn-green btn-block btn-border', 'name' => 'login-button']) ?>
+                <?= Html::submitButton('Ingresar', ['class' => 'btn btn-green btn-block btn-border', 'name' => 'login-button']) ?>
            </div>
            <div class="card-footer">
            </div>

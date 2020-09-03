@@ -27,13 +27,13 @@
     <div class="sidebar-wrapper">
         <ul class="nav">
             <li class="nav-item active  ">
-            <a class="nav-link" href="/">
+            <a class="nav-link" href="/ordenes-trabajo">
                 <i class="material-icons">dashboard</i>
                 <p>Inicio</p>
             </a>
             </li>
             <li class="nav-item ">
-                <a class="nav-link" href="login">
+                <a class="nav-link" href="ordenes-trabajo">
                 <i class="material-icons">assignment</i>
                 <p>Lista de Operaciones</p>
                 </a>
