@@ -1,9 +1,9 @@
 <?php
-$postgres_ip    = 'localhost';
-$postgres_db    = 'ordenes_trabajo';
+$postgres_ip    = '192.168.1.8';
+$postgres_db    = 'local';
 $postgres_user  = 'demo';
 $postgres_pwd   = 'demo123';
-$enableCache    = true;
+// $enableCache    = true;
 $postgres_port  = '5432';
 
 return [
