@@ -19,7 +19,14 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "ricar2ce/yii2-material-theme": "^1.1",
-        "yidas/yii2-fontawesome": "4.0"
+        "yidas/yii2-fontawesome": "4.0",
+        "yiisoft/yii2-bootstrap4": "^2.0",
+        "kartik-v/yii2-widget-select2": "^2.1",
+        "kartik-v/yii2-widget-fileinput": "^1.0",
+        "kartik-v/yii2-grid": "^3.3",
+        "ramsey/uuid": "^4.1",
+        "kartik-v/yii2-widget-alert": "^1.1",
+        "developeruz/yii2-db-rbac": "^1.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

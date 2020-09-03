@@ -37,3 +37,6 @@ tests/_support/_generated
 
 #assets folder
 /assets
+
+#uploads folder
+/uploads
