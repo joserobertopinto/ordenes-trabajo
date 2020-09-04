@@ -10,6 +10,7 @@ use kartik\file\FileInput;
 use yii\helpers\Url;
 use kartik\grid\GridView;
 use yii\bootstrap4\Modal;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\OrdenesTrabajo */
@@ -29,6 +30,28 @@ use yii\bootstrap4\Modal;
 
         <?= $form->field($model, 'descripcion', ['labelOptions' => [ 'class' => 'control-label bmd-label-floating' ]])->textarea(['rows' => 6]) ?>
         
+        <?php $urlSelect3 = \yii\helpers\Url::to(['/ordenes-trabajo/operadores-ajax']);?>
+                
+        <?= $form->field($model, 'listaOperadores', [])->widget(kartik\select2\Select2::classname(), [
+                // 'options' => [
+                //     'placeholder' => 'Seleccione Operadores'
+                // ],
+                'value' => $model->listaOperadores,
+                'initValueText' => $model->listaOperadoresTexts,
+                'pluginOptions' => [
+                    // 'allowClear' => true,
+                    'minimumInputLength' => 3,
+                    'multiple' => true,
+                    'ajax' => [
+                        'url' => $urlSelect3,
+                        'dataType' => 'json',
+                        'data' => new JsExpression('function(params) { return {q:params.term}; }'),
+                        'delay' => 250 // para que no haga el request inmediatamente mientras tipea y luego los cancele
+                    ]
+                ]
+            ]);
+        ?>
+
         <?= $form->field($model, 'id_tipo_trabajo')->widget(kartik\select2\Select2::classname(), [
             // 'initValueText' => $model->incumbenciasActualesTexts,
             // 'value'=> $model->incumbenciasActualesIDs,
