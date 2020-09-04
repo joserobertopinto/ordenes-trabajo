@@ -49,7 +49,7 @@ use kartik\alert\Alert;
     <?= $form->field($model, 'descripcion', ['labelOptions' => [ 'class' => 'control-label bmd-label-floating' ]])->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Agregar Archivo'), ['class' => 'btn btn-success btn-guardar-archivo']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Agregar Archivo'), ['class' => 'btn btn-success btn-guardar-archivo', 'id' => 'submit-modal-archivo']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -70,6 +70,9 @@ use kartik\alert\Alert;
             $.ajax({
                 url: url,
                 type: "POST",
+                beforeSend   : function(){
+                    $("#submit-modal-archivo").html("<span class=\"fa fa-spin fa-spinner\"></span> Procesando...");
+                    $("#submit-modal-archivo").prop("disabled", true);},
                 data: formData,
                 success: function (data) {
                     var json = JSON.parse(data);
@@ -85,6 +88,7 @@ use kartik\alert\Alert;
         });'
     );
 
+    //fix css para inputfile en BS4
     $this->RegisterCss("
         input[type=file]{
             opacity:1!important;
