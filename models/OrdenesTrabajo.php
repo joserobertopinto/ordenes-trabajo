@@ -5,6 +5,9 @@ namespace app\models;
 use Yii;
 use app\models\Archivo;
 use app\common\utils\ModelUtil;
+use app\common\utils\Fecha;
+use app\models\OrdenAnioNro;
+use app\models\UsuarioOrdenTrabajo;
 
 /**
  * This is the model class for table "ordenes_trabajo.ordenes_trabajo".
@@ -28,9 +31,11 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
      */
     
     //variables para el form
-    public $fecha_finalizacion, $hora_finalizacion;
+    public $fecha_finalizacion, $hora_finalizacion, $archivo;
 
-    public $archivo;
+    public $listaOperadores = [];
+
+    public $listaOperadoresTexts;
 
     public static function tableName()
     {
@@ -45,8 +50,9 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
         return [
             [['fecha_finalizacion','hora_finalizacion','titulo', 'descripcion', 'id_tipo_trabajo', 'id_inmueble'], 'required', 'on' =>[self::SCENARIO_UPDATE]],
             [['titulo', 'descripcion', 'id_tipo_trabajo', 'id_inmueble','nro_orden_trabajo'], 'safe', 'on' =>[self::SCENARIO_CREATE]],
+            [['fecha_hora_creacion','id_usuario_crea','id_historial_estado_orden_trabajo'], 'required', 'on' =>[self::SCENARIO_CREATE]],
             [['descripcion', 'id_historial_estado_orden_trabajo', 'id_tipo_trabajo', 'id_inmueble'], 'string'],
-            [['fecha_hora_creacion', 'fecha_hora_finalizacion'], 'safe'],
+            [['fecha_hora_creacion', 'fecha_hora_finalizacion','listaOperadores'], 'safe'],
             [['nro_orden_trabajo'], 'string', 'max' => 50],
             [['nro_orden_trabajo'], 'string', 'max' => 100],
             [['id_ordenes_trabajo'], 'unique'],
@@ -73,6 +79,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             'titulo' => Yii::t('app', 'Título'),
             'fecha_finalizacion' => Yii::t('app', 'Fecha de Finalización'),
             'hora_finalizacion' => Yii::t('app', 'Hora de Finalización'),
+            'listaOperadores'  => Yii::t('app','Operadores asignados a la tarea'),
         ];
     }
 
@@ -83,6 +90,22 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Archivo::className(), ['id_ordenes_trabajo' => 'id_ordenes_trabajo']);
     }
+    
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getUsuarioOrdenTrabajo()
+    {
+        return $this->hasMany(UsuarioOrdenTrabajo::className(), ['id_ordenes_trabajo' => 'id_ordenes_trabajo']);
+    }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getUltimoEstadoOrdenTrabajo()
+    {
+        return $this->hasOne(HistorialEstadoOrdenTrabajo::className(), ['id_historial_estado_orden_trabajo' => 'id_historial_estado_orden_trabajo']);
+    }
 
     /**
      * crea nuevo estado y asocia a orden de trabajo
@@ -92,7 +115,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
         $error = '';
         $historialOrden = new HistorialEstadoOrdenTrabajo;
         $historialOrden->id_estado = $id_estado;
-        // $historialOrden->id_usuario = $id_usuario; //ver id_persona
+        $historialOrden->id_usuario = Yii::$app->user->identity->id_usuario;
         $historialOrden->fecha_hora = Date('Y-m-d H:i:s');
         $historialOrden->id_ordenes_trabajo = $this->id_ordenes_trabajo;
 
@@ -101,10 +124,54 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
         
         if (empty($error)){
             $this->id_historial_estado_orden_trabajo = $historialOrden->id_historial_estado_orden_trabajo;
+            
             if (!$this->save())
                 $error = 'No se pudo actualizar el Historial de la Orden.<BR>'.ModelUtil::aplanarErrores($this);
         }
 
         return $error;
+    }
+
+    /**
+     * seteo nro de orden con bloqueo
+     */
+    public function setNumeroOrden(){
+        
+        if(is_null($this->nro_orden_trabajo)){
+            
+            $anio  = substr(Fecha::fechaHoy(), 0, 4);
+
+            $numeroOrden = OrdenAnioNro::getProximoNumero($anio);
+            
+            $this->nro_orden_trabajo =  $anio.'-'.str_pad($numeroOrden, 5, "0", STR_PAD_LEFT);
+
+        }
+    }
+
+    /**
+     * cargo id con text de operadores al modelo
+     */
+    public function loadOperadores(){
+        if (!empty($this->usuarioOrdenTrabajo)){
+            foreach ($this->usuarioOrdenTrabajo as $usuarioOrden) {
+                
+                $this->listaOperadores[] = $usuarioOrden->id_usuario;
+
+                $persona = $usuarioOrden->usuario->persona;
+                
+                $this->listaOperadoresTexts[]  = $persona->apellido . ', ' . $persona->nombre .' (' . $persona->organismo->descripcion . ')';
+            }
+        }
+    }
+
+    /**
+     * cargo id con text de operadores al modelo
+     */
+    public function loadFechaFinalizacion(){
+        
+        $fecha_hora = explode(' ',$this->fecha_hora_finalizacion);
+        $this->fecha_finalizacion = $fecha_hora[0];
+        $this->hora_finalizacion = $fecha_hora[1];
+
     }
 }
