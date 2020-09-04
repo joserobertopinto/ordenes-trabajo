@@ -7,6 +7,7 @@ use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\helpers\Security;
 use yii\web\IdentityInterface;
+use app\models\Persona;
 
 /**
  * This is the model class for table "ordenes_trabajo.usuario".
@@ -41,7 +42,7 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             [['descripcion', 'password', 'tipo_usuario'], 'string', 'max' => 255],
             [['username'], 'string', 'max' => 50],
             [['id_usuario'], 'unique'],
-            [['id_persona'], 'exist', 'skipOnError' => true, 'targetClass' => OrdenesTrabajoPersona::className(), 'targetAttribute' => ['id_persona' => 'id_persona']],
+            [['id_persona'], 'exist', 'skipOnError' => true, 'targetClass' => Persona::className(), 'targetAttribute' => ['id_persona' => 'id_persona']],
         ];
     }
 
@@ -60,8 +61,17 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
             'pwd_hash' => Yii::t('app', 'Pwd Hash'),
         ];
     }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getPersona()
+    {
+    	return $this->hasOne(Persona::className(), ['id_persona' => 'id_persona']);
+    }
+
     /** INCLUDE USER LOGIN VALIDATION FUNCTIONS**/
-        /**
+    /**
      * @inheritdoc
      */
     public static function findIdentity($id)
@@ -187,4 +197,8 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
         $this->password_reset_token = null;
     }
     /** EXTENSION MOVIE **/
+
+    public function getListRolesByIdUser(){
+        return array_keys(\Yii::$app->authManager->getRolesByUser($this->getId()));
+    }
 }
