@@ -5,13 +5,14 @@ namespace app\models;
 use Yii;
 use app\models\Estado;
 use app\models\OrdenesTrabajo;
+use app\models\User;
 
 /**
  * This is the model class for table "ordenes_trabajo.historial_estado_orden_trabajo".
  *
  * @property string $id_historial_estado_orden_trabajo
  * @property string $id_estado
- * @property string|null $id_usuario
+ * @property string|null $id_usuario *** id del usuario que realizo el cambio de estado ***
  * @property string $fecha_hora
  * @property string|null $observacion
  * @property string $id_ordenes_trabajo
@@ -60,8 +61,24 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
     /**
     * @return \yii\db\ActiveQuery
     */
+    public function getUsuario()
+    {
+        return $this->hasOne(User::className(), ['id_usuario' => 'id_usuario']);
+    }
+    
+    /**
+    * @return \yii\db\ActiveQuery
+    */
     public function getEstado()
     {
         return $this->hasOne(Estado::className(), ['id_estado' => 'id_estado']);
+    }
+
+    /**
+     * Para time-line
+     * 
+     * */
+    public function color() {
+        return $this->estado->color();
     }
 }

@@ -48,4 +48,27 @@ class Estado extends \yii\db\ActiveRecord
             'descripcion' => Yii::t('app', 'Descripcion'),
         ];
     }
+
+    /**
+     * color para cada estado
+     */
+    public function color() {
+       
+        if ($this->id_estado == self::ESTADO_BORRADOR){
+            $color = 'bg-blue';
+//             $classAndIcon["icon"] = "fa fa-balance-scale " . $classAndIcon['color'];
+        }
+        elseif ($this->id_estado == self::ESTADO_PENDIENTE){
+            $color = 'bg-purple';
+//             $classAndIcon["icon"] = "fa fa-check-square-o " . $classAndIcon['color'];
+        }elseif ($this->id_estado == self::ESTADO_EN_PROGRESO){
+            $color = 'bg-aqua';
+//             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
+        }elseif ($this->id_estado == self::ESTADO_FINALIZADO){
+            $color = 'bg-red';
+//             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
+        }
+        
+        return $color;
+    }
 }

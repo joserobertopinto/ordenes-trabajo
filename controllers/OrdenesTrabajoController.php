@@ -35,7 +35,7 @@ class OrdenesTrabajoController extends Controller
         		'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['update','create','index','view'],
+                        'actions' => ['update','create','index','view','operadores-ajax'],
                         'allow' => true,
                         'roles' => ['@']
                     ],
@@ -73,8 +73,17 @@ class OrdenesTrabajoController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        
+        $archivo    = new Archivo();
+        
+        $dataProviderArchivo = new ActiveDataProvider([
+            'query' => $model->getArchivos(),
+        ]);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'dataProviderArchivo' => $dataProviderArchivo
         ]);
     }
 

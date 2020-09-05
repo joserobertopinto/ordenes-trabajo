@@ -66,4 +66,10 @@ class Persona extends \yii\db\ActiveRecord
     	return $this->hasOne(Organismo::className(), ['id_organismo' => 'id_organismo']);
     }
 
+    /**
+     * apellido nombre concatenado
+     */
+    public function getApellidoNombre(){
+        return $this->apellido.', '.$this->nombre;
+    }
 }

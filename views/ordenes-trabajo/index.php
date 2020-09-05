@@ -24,12 +24,12 @@ $urlNew = Yii::$app->urlManager->createUrl(['ordenes-trabajo/create']);
             </h4>
             <p class="card-category">Lista</p>
     </div>
-    <div class='card-body'>
+    <div class='card-body table-responsive'>
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'striped' => false,
-            'bordered'=>false, 
+            'bordered'=>false,
             'columns' => [
                 [
                     'attribute' => 'id_ordenes_trabajo',

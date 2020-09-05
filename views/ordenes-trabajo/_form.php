@@ -105,6 +105,8 @@ use yii\web\JsExpression;
                         'dataProvider'=> $dataProviderArchivo,
                         'filterModel' => false,
                         'summary' => '',
+                        'striped' => false,
+                        'bordered'=>false,
                         'columns' => [
                             [
                                 'attribute' => 'nombre',

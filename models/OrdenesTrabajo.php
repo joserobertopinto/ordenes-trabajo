@@ -112,6 +112,14 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
     /**
     * @return \yii\db\ActiveQuery
     */
+    public function getHistorialEstadoOrdenTrabajo()
+    {
+        return $this->hasMany(HistorialEstadoOrdenTrabajo::className(), ['id_ordenes_trabajo' => 'id_ordenes_trabajo'])->orderBy(['fecha_hora'=>SORT_DESC]);
+    }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
     public function getTipoTrabajo()
     {
         return $this->hasOne(TipoTrabajo::className(), ['id_tipo_trabajo' => 'id_tipo_trabajo']);

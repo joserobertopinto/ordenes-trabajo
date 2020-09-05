@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 use app\models\Archivo;
 use app\models\ArchivoSearch;
 use yii\web\Controller;
@@ -23,27 +24,16 @@ class ArchivoController extends Controller
     public function behaviors()
     {
         return [
-            // 'access' => [
-        	// 	'class' => AccessControl::className(),
-        	// 			'rules' => [
-        	// 					[
-       		// 						'actions' => ['index','view'],
-       		// 						'allow' => true,
-       		// 						//'roles' => ['P_XXXXXX'],
-        	// 					],
-        	// 					[
-        	// 						'actions' => ['create','update', 'descargar', 'descargar-imagen'],
-        	// 						'allow' => true,
-        	// 						//'roles' => ['P_YYYYYYYYYYY'],
-        	// 					],
-        	// 					[
-        	// 						'actions' => ['delete'],
-        	// 						'allow' => true,
-        	// 						//'roles' => ['P_YYYYYYYYYYY'],
-        	// 					],
-        						
-        	// 			],
-        	// 	],   
+            'access' => [
+        		'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['create','descargar'],
+                            'allow' => true,
+                            'roles' => ['@'],
+                        ],
+                    ],
+        		],   
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
