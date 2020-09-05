@@ -1,22 +1,29 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\DetailView;
+    use yii\helpers\Html;
+    use yii\widgets\DetailView;
 
 
-/* @var $this yii\web\View */
-/* @var $model app\models\OrdenesTrabajo */
+    /* @var $this yii\web\View */
+    /* @var $model app\models\OrdenesTrabajo */
 
-$this->title = 'Ordenes de Trabajo';
+    $this->title = 'Ordenes de Trabajo';
 
-\yii\web\YiiAsset::register($this);
+    \yii\web\YiiAsset::register($this);
+    $urlEdit = Yii::$app->urlManager->createUrl(['ordenes-trabajo/update','id' => $model->id_ordenes_trabajo]);
+    $urlDelete = Yii::$app->urlManager->createUrl(['ordenes-trabajo/delete','id' => $model->id_ordenes_trabajo]);
 ?>
 <div class="ordenes-trabajo-view">
     <div class='card'>
     <div class="card-header-info">
             <h4 class="card-title"><?= strtoupper(Html::encode($model->titulo)) ?>
-            <button type="button" title="Eliminar Orden" style="float: right; border: 0px;background: transparent;color:white"><i class="material-icons">delete</i></button>
-            <button type="button" title="Editar Orden" style="float: right; border: 0px;background: transparent;color:white"   ><i class="material-icons">edit</i></button>
+            
+                <button class="btn-header-card" rel=<?= $urlEdit ?> type="button" title="Eliminar Orden"><i class="material-icons">delete</i></button>
+
+                <?= Html::a('<i class="material-icons">edit</i></i>',
+                $urlEdit,
+                ['title'=>Yii::t('app', 'Editar Orden'), 'class' => 'btn-header-card']); ?>
+            
             </h4>
             <p class="card-category"><?= 'Orden Nro: '.$model->nro_orden_trabajo ?></p>
     </div>
