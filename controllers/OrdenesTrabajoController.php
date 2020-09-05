@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 use app\common\utils\ModelUtil;
 use app\models\OrdenesTrabajo;
 use app\models\OrdenesTrabajoSearch;
@@ -30,6 +31,16 @@ class OrdenesTrabajoController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+        		'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['update','create','index','view'],
+                        'allow' => true,
+                        'roles' => ['@']
+                    ],
+                ]
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
