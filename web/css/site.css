@@ -113,3 +113,11 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.btn-header-card {
+    float: right; 
+    border: 0px;
+    background: transparent;
+    color:white;
+    vertical-align: inherit;
+}
