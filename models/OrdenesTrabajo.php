@@ -8,6 +8,8 @@ use app\common\utils\ModelUtil;
 use app\common\utils\Fecha;
 use app\models\OrdenAnioNro;
 use app\models\UsuarioOrdenTrabajo;
+use app\models\TipoTrabajo;
+use app\models\Inmueble;
 
 /**
  * This is the model class for table "ordenes_trabajo.ordenes_trabajo".
@@ -108,6 +110,22 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
     }
 
     /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getTipoTrabajo()
+    {
+        return $this->hasOne(TipoTrabajo::className(), ['id_tipo_trabajo' => 'id_tipo_trabajo']);
+    }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getInmueble()
+    {
+        return $this->hasOne(Inmueble::className(), ['id_inmueble' => 'id_inmueble']);
+    }
+
+    /**
      * crea nuevo estado y asocia a orden de trabajo
      * Empty($error), si no hay error
      */
@@ -173,5 +191,47 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
         $this->fecha_finalizacion = $fecha_hora[0];
         $this->hora_finalizacion = $fecha_hora[1];
 
+    }
+
+    /**
+     * descripcion por relacion de tipo de trabajo 
+     */
+    public function getDescripcionUltimoEstado(){
+        return $this->ultimoEstadoOrdenTrabajo->estado->descripcion;
+    }
+
+    /**
+     * descripcion por relacion de tipo de trabajo
+     */
+    public function getDescripcionTipoTrabajo(){
+        return $this->tipoTrabajo->descripcion;
+    }
+
+    /**
+     * descripcion por relacion de tipo de trabajo
+     */
+    public function getDescripcionInmueble(){
+        return $this->inmueble->descripcion;
+    }
+
+    /**
+     * descripcion por relacion de tipo de trabajo 
+     */
+    public function getLabelUltimoEstado(){
+        return '<span>' . $this->getDescripcionUltimoEstado . '</span>';
+    }
+
+    /**
+     * descripcion por relacion de tipo de trabajo
+     */
+    public function getLabelTipoTrabajo(){
+        return '<span>' . $this->getDescripcionTipoTrabajo . '</span>';
+    }
+
+    /**
+     * descripcion por relacion de tipo de trabajo
+     */
+    public function getLabelInmueble(){
+        return '<span>' . $this->getDescripcionInmueble . '</span>';
     }
 }

@@ -56,4 +56,12 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
             'id_ordenes_trabajo' => Yii::t('app', 'Id Ordenes Trabajo'),
         ];
     }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getEstado()
+    {
+        return $this->hasOne(Estado::className(), ['id_estado' => 'id_estado']);
+    }
 }
