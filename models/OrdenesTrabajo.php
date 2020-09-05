@@ -52,7 +52,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
         return [
             [['fecha_finalizacion','hora_finalizacion','titulo', 'descripcion', 'id_tipo_trabajo', 'id_inmueble'], 'required', 'on' =>[self::SCENARIO_UPDATE]],
             [['titulo', 'descripcion', 'id_tipo_trabajo', 'id_inmueble','nro_orden_trabajo'], 'safe', 'on' =>[self::SCENARIO_CREATE]],
-            [['fecha_hora_creacion','id_usuario_crea','id_historial_estado_orden_trabajo'], 'required', 'on' =>[self::SCENARIO_CREATE]],
+            [['fecha_hora_creacion','id_usuario_crea'], 'required', 'on' =>[self::SCENARIO_CREATE]],
             [['descripcion', 'id_historial_estado_orden_trabajo', 'id_tipo_trabajo', 'id_inmueble'], 'string'],
             [['fecha_hora_creacion', 'fecha_hora_finalizacion','listaOperadores'], 'safe'],
             [['nro_orden_trabajo'], 'string', 'max' => 50],
@@ -186,11 +186,11 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
      * cargo id con text de operadores al modelo
      */
     public function loadFechaFinalizacion(){
-        
-        $fecha_hora = explode(' ',$this->fecha_hora_finalizacion);
-        $this->fecha_finalizacion = $fecha_hora[0];
-        $this->hora_finalizacion = $fecha_hora[1];
-
+        if(isset($this->fecha_hora_finalizacion)){
+            $fecha_hora = explode(' ',$this->fecha_hora_finalizacion);
+            $this->fecha_finalizacion = $fecha_hora[0];
+            $this->hora_finalizacion = $fecha_hora[1];
+        }
     }
 
     /**
