@@ -17,7 +17,7 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
     public function rules()
     {
         return [
-            [['id_ordenes_trabajo', 'nro_orden_trabajo', 'fecha_hora_creacion', 'fecha_hora_finalizacion', 'descripcion', 'id_historial_estado_orden_trabajo', 'id_tipo_trabajo', 'id_inmueble'], 'safe'],
+            [['id_ordenes_trabajo', 'nro_orden_trabajo', 'fecha_hora_creacion', 'fecha_hora_finalizacion', 'descripcion', 'id_historial_estado_orden_trabajo', 'id_tipo_trabajo', 'id_inmueble','titulo'], 'safe'],
         ];
     }
 
