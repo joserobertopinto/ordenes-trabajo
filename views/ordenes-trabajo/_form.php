@@ -84,10 +84,10 @@ use yii\web\JsExpression;
 
         <div class="row">
             <div class="col-md-4">
-                <?= $form->field($model, 'fecha_finalizacion')->textInput(['type' => 'date']) ?>
+                <?= $form->field($model, 'fecha_comienzo')->textInput(['type' => 'date']) ?>
             </div>
             <div class="col-md-4">
-                <?= $form->field($model, 'hora_finalizacion')->textInput(['type' => 'time']) ?>
+                <?= $form->field($model, 'hora_comienzo')->textInput(['type' => 'time']) ?>
             </div>
         </div>
 

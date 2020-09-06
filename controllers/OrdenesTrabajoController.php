@@ -135,7 +135,7 @@ class OrdenesTrabajoController extends Controller
             
             $transaccion= yii::$app->db->beginTransaction();
             
-            $model->fecha_hora_finalizacion = $model->fecha_finalizacion.' '. $model->hora_finalizacion;
+            $model->fecha_hora_comienzo = $model->fecha_comienzo.' '. $model->hora_comienzo;
             
             $error = $this->_guardarOperadores($model);
             
@@ -162,7 +162,7 @@ class OrdenesTrabajoController extends Controller
         }
 
         $model->loadOperadores();
-        $model->loadFechaFinalizacion();
+        $model->loadFechaComienzo();
 
         $archivo    = new Archivo();
         $dataProviderArchivo = new ActiveDataProvider([

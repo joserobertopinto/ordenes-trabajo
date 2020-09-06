@@ -40,7 +40,13 @@
                 'attributes' => [
                     'descripcion:ntext',
                     'fecha_hora_creacion',
-                    'fecha_hora_finalizacion',
+                    'fecha_hora_comienzo',
+                    [
+                      'attribute' => 'fecha_hora_finalizacion',
+                      'value'     => $model->fecha_hora_finalizacion,
+                      'label'     => 'Estado Actual',
+                      'visible'   => (is_null($model->fecha_hora_finalizacion)) ? false : true,
+                    ],
                     [
                         'attribute' => 'id_historial_estado_orden_trabajo',
                         'value'     => $model->getDescripcionUltimoEstado(),

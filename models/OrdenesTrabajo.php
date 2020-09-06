@@ -33,7 +33,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
      */
     
     //variables para el form
-    public $fecha_finalizacion, $hora_finalizacion, $archivo;
+    public $fecha_finalizacion, $hora_finalizacion, $fecha_comienzo, $hora_comienzo, $archivo;
 
     public $listaOperadores = [];
 
@@ -50,7 +50,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fecha_finalizacion','hora_finalizacion','titulo', 'descripcion', 'id_tipo_trabajo', 'id_inmueble'], 'required', 'on' =>[self::SCENARIO_UPDATE]],
+            [['fecha_comienzo','hora_comienzo','titulo', 'descripcion', 'id_tipo_trabajo', 'id_inmueble'], 'required', 'on' =>[self::SCENARIO_UPDATE]],
             [['titulo', 'descripcion', 'id_tipo_trabajo', 'id_inmueble','nro_orden_trabajo'], 'safe', 'on' =>[self::SCENARIO_CREATE]],
             [['fecha_hora_creacion','id_usuario_crea'], 'required', 'on' =>[self::SCENARIO_CREATE]],
             [['descripcion', 'id_historial_estado_orden_trabajo', 'id_tipo_trabajo', 'id_inmueble'], 'string'],
@@ -81,6 +81,8 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             'titulo' => Yii::t('app', 'Título'),
             'fecha_finalizacion' => Yii::t('app', 'Fecha de Finalización'),
             'hora_finalizacion' => Yii::t('app', 'Hora de Finalización'),
+            'fecha_comienzo' => Yii::t('app', 'Fecha de Comienzo'),
+            'hora_comienzo' => Yii::t('app', 'Hora de Comienzo'),
             'listaOperadores'  => Yii::t('app','Operadores asignados a la tarea'),
         ];
     }
@@ -198,6 +200,17 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             $fecha_hora = explode(' ',$this->fecha_hora_finalizacion);
             $this->fecha_finalizacion = $fecha_hora[0];
             $this->hora_finalizacion = $fecha_hora[1];
+        }
+    }
+
+    /**
+     * cargo id con text de operadores al modelo
+     */
+    public function loadFechaComienzo(){
+        if(isset($this->fecha_hora_comienzo)){
+            $fecha_hora = explode(' ',$this->fecha_hora_comienzo);
+            $this->fecha_comienzo = $fecha_hora[0];
+            $this->hora_comienzo = $fecha_hora[1];
         }
     }
 
