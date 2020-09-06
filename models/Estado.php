@@ -17,6 +17,8 @@ class Estado extends \yii\db\ActiveRecord
     const ESTADO_EN_PROGRESO    = '45077e45-8a78-4b4d-9abb-c7e6c9fb3d07';	//EN PROGRESO
     const ESTADO_FINALIZADO     = '27ab5c71-a7b4-411b-bba4-4d4a98efcfc0';	//FINALIZADO
 
+    public $orden = [0 => self::ESTADO_BORRADOR, 1 => self::ESTADO_PENDIENTE, 2 => self::ESTADO_EN_PROGRESO,  3 => self::ESTADO_FINALIZADO];
+
     /**
      * {@inheritdoc}
      */
@@ -70,5 +72,37 @@ class Estado extends \yii\db\ActiveRecord
         }
         
         return $color;
+    }
+
+    /**
+    * 
+    */
+    public function getEstadoProximo() {
+        $indiceActual   = array_search($this->id_estado,$this->orden);
+
+        if($indiceActual != array_key_last($this->orden))
+            $proximo = $indiceActual + 1;
+        else 
+            $proximo = NULL;
+
+        return (is_null($proximo)) ? $proximo : $this->orden[$proximo];
+    }
+
+    /**
+    * 
+    */
+    public function getEstadoAnterior() {
+        $indiceActual   = array_search($this->id_estado,$this->orden);
+
+        if($indiceActual != array_key_first($this->orden))
+            $anterior = $indiceActual - 1;
+        else 
+            $anterior = NULL;
+        
+        return (is_null($anterior)) ? $anterior : $this->orden[$anterior];
+    }
+
+    public function getEstadoLabel($id_estado) {
+        return Estado::findOne($id_estado)->descripcion;
     }
 }

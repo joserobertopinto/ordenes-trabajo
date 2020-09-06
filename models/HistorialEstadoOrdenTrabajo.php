@@ -81,4 +81,12 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
     public function color() {
         return $this->estado->color();
     }
+
+    public function showButtonProximo(){
+        return (!is_null($this->estado->getEstadoProximo()));
+    }
+
+    public function showButtonAnterior(){
+        return (!is_null($this->estado->getEstadoAnterior()));
+    }
 }

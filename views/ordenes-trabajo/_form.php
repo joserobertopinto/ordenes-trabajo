@@ -160,6 +160,7 @@ use yii\web\JsExpression;
                         $("#archivoModal").modal("show");
                     });
                 });
+                
                 $("#archivoModal").on("hidden.bs.modal", function () {
                     $.pjax.reload({container:"#w1-pjax"});
                 });

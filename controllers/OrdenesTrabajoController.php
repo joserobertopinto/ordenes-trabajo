@@ -12,6 +12,7 @@ use app\models\ArchivoSearch;
 use app\models\Estado;
 use app\models\Persona;
 use app\models\UsuarioOrdenTrabajo;
+use app\models\HistorialEstadoOrdenTrabajo;
 use app\common\utils\Permiso;
 use app\common\utils\Fecha;
 use yii\web\Controller;
@@ -35,7 +36,7 @@ class OrdenesTrabajoController extends Controller
         		'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['update','create','index','view','operadores-ajax'],
+                        'actions' => ['update','create','index','view','operadores-ajax', 'pasar'],
                         'allow' => true,
                         'roles' => ['@']
                     ],
@@ -188,6 +189,46 @@ class OrdenesTrabajoController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+     /**
+     * Creates a new OrdenesTrabajo model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionPasar($id = null, $id_estado = null)
+    {
+        $ok = true;
+        $model = new OrdenesTrabajo;
+        $historial = new HistorialEstadoOrdenTrabajo;
+
+        if ($historial->load(Yii::$app->request->post()) && $model->load(Yii::$app->request->post())) {
+            $model->refresh();
+            $transaccion= yii::$app->db->beginTransaction();
+
+            $error  = ($model->pasarEstado($historial->id_estado));
+            if(empty($error)){
+                $transaccion->commit();
+                Yii::$app->session->addFlash('success', 'Pase realizado con éxito.');
+                
+                return $this->redirect(['view', 'id' => $model->id_ordenes_trabajo]);
+            }
+            else{
+                $ok = false;
+                Yii::$app->session->addFlash('danger', $error);
+                $transaccion->rollBack();
+            }
+        }
+
+        $model = $this->findModel($id);
+        $historial->id_estado = $id_estado;
+        
+        $response['ok'] = $ok;
+        $response['html']= $this->renderAjax('_formPasar',['model' => $model, 'historial' => $historial]);
+        $response['titulo'] = 'Pasar a '. $historial->estado->descripcion;
+        
+        return  json_encode($response);
+
     }
 
     /**

@@ -34,6 +34,9 @@
             <?=
             DetailView::widget([
                 'model' => $model,
+                'options' => [
+                    'class' => 'detail-view table-bordered'
+                ],
                 'attributes' => [
                     'descripcion:ntext',
                     'fecha_hora_creacion',
@@ -84,7 +87,9 @@
     <div class="card-body">
       <div class="tab-content">
         <div class="tab-pane active show" id="linea-tiempo">
+
           <?= $this->render('_historial', ['model'=> $model]) ?>
+        
         </div>
         <div class="tab-pane" id="archivos">
         <div class="card">

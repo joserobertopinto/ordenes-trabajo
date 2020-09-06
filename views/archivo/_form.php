@@ -49,7 +49,7 @@ use kartik\alert\Alert;
     <?= $form->field($model, 'descripcion', ['labelOptions' => [ 'class' => 'control-label bmd-label-floating' ]])->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Agregar Archivo'), ['class' => 'btn btn-success btn-guardar-archivo', 'id' => 'submit-modal-archivo']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Agregar Archivo'), ['class' => 'btn btn-success', 'id' => 'submit-modal-archivo']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
