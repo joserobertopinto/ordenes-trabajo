@@ -330,8 +330,6 @@ class OrdenesTrabajoController extends Controller
      * @return String|Empty $error
      */
     private function _guardarOperadores($model) {
-        // print_r($model->listaOperadores);
-        // exit;
         $error = '';
         
         //elimino registros anteriores, entiendo no es necesario guardarlos 

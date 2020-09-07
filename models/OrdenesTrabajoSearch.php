@@ -5,6 +5,7 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\OrdenesTrabajo;
+use app\common\utils\Permiso;
 
 /**
  * OrdenesTrabajoSearch represents the model behind the search form of `app\models\OrdenesTrabajo`.
@@ -68,6 +69,13 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
             ->andFilterWhere(['ilike', 'id_tipo_trabajo', $this->id_tipo_trabajo])
             ->andFilterWhere(['ilike', 'id_inmueble', $this->id_inmueble]);
 
+        /**
+         * agrego filtro operador
+         */
+        if(Permiso::esUsuarioOperador())
+            $query->joinWith(['usuarioOrdenTrabajo'])
+                ->andWhere(['=', 'usuario_orden_trabajo.id_usuario', \Yii::$app->user->getId()]);
+            
         return $dataProvider;
     }
 }
