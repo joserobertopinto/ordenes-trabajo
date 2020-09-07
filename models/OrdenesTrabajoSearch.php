@@ -18,7 +18,7 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
     public function rules()
     {
         return [
-            [['id_ordenes_trabajo', 'nro_orden_trabajo', 'fecha_hora_creacion', 'fecha_hora_finalizacion', 'descripcion', 'id_historial_estado_orden_trabajo', 'id_tipo_trabajo', 'id_inmueble','titulo'], 'safe'],
+            [['id_ordenes_trabajo', 'nro_orden_trabajo', 'fecha_hora_creacion', 'fecha_hora_finalizacion', 'descripcion', 'id_historial_estado_orden_trabajo', 'id_tipo_trabajo', 'id_inmueble','titulo','estadoActual'], 'safe'],
         ];
     }
 
@@ -62,12 +62,20 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
             'fecha_hora_finalizacion' => $this->fecha_hora_finalizacion,
         ]);
 
-        $query->andFilterWhere(['ilike', 'id_ordenes_trabajo', $this->id_ordenes_trabajo])
+        $query->andFilterWhere(['=', 'id_ordenes_trabajo', $this->id_ordenes_trabajo])
             ->andFilterWhere(['ilike', 'nro_orden_trabajo', $this->nro_orden_trabajo])
             ->andFilterWhere(['ilike', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['ilike', 'id_historial_estado_orden_trabajo', $this->id_historial_estado_orden_trabajo])
-            ->andFilterWhere(['ilike', 'id_tipo_trabajo', $this->id_tipo_trabajo])
-            ->andFilterWhere(['ilike', 'id_inmueble', $this->id_inmueble]);
+            ->andFilterWhere(['=', 'id_historial_estado_orden_trabajo', $this->id_historial_estado_orden_trabajo])
+            ->andFilterWhere(['=', 'id_tipo_trabajo', $this->id_tipo_trabajo])
+            ->andFilterWhere(['=', 'id_inmueble', $this->id_inmueble]);
+
+        if(!empty($this->estadoActual))
+            $query->joinWith(['ultimoEstadoOrdenTrabajo'])
+                ->andFilterWhere(['=', 'id_estado', $this->estadoActual]);
+        
+        // if(!empty($this->estadoActual))
+        //     $query->joinWith(['ultimoEstadoOrdenTrabajo'])
+        //         ->andFilterWhere(['=', 'id_tipo_trabajo', $this->estadoActual]);
 
         /**
          * agrego filtro operador

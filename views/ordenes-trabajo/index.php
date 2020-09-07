@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
+use app\models\Estado;
+use app\models\TipoTrabajo;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\OrdenesTrabajoSearch */
@@ -36,13 +39,30 @@ $urlNew = Yii::$app->urlManager->createUrl(['ordenes-trabajo/create']);
                     'visible'   => false
                 ],
                 'nro_orden_trabajo',
-                'titulo',
-                'fecha_hora_finalizacion',
-                'descripcion:ntext',
-                //'id_historial_estado_orden_trabajo',
-                //'id_tipo_trabajo',
-                //'id_inmueble',
-
+                [
+                    'attribute' => 'id_tipo_trabajo',
+                    'value'     => function($model){ return $model->tipoTrabajo->descripcion;},
+                    'filter'    =>ArrayHelper::map(TipoTrabajo::find()->all(), 'id_tipo_trabajo', 'descripcion'),
+                    'filterType'=>GridView::FILTER_SELECT2,
+                    'filterWidgetOptions'=>['hideSearch'=>true,'pluginOptions'=>['allowClear'=>true],],
+                    'filterInputOptions'=>['placeholder'=>'Todas'],
+                ],
+                [
+                    'attribute' => 'estadoActual',
+                    'value'     => function($model){ return $model->getDescripcionUltimoEstado();},
+                    'filter'    =>ArrayHelper::map(Estado::find()->all(), 'id_estado', 'descripcion'),
+                    'filterType'=>GridView::FILTER_SELECT2,
+                    'filterWidgetOptions'=>['hideSearch'=>true,'pluginOptions'=>['allowClear'=>true],],
+                    'filterInputOptions'=>['placeholder'=>'Todas'],
+                ],
+                [
+                    'attribute' => 'operadores',
+                    'value'     => function($model){ return $model->getDescripcionUltimoEstado();},
+                    'filter'    =>ArrayHelper::map(Estado::find()->all(), 'id_estado', 'descripcion'),
+                    'filterType'=>GridView::FILTER_SELECT2,
+                    'filterWidgetOptions'=>['hideSearch'=>true,'pluginOptions'=>['allowClear'=>true],],
+                    'filterInputOptions'=>['placeholder'=>'Todas'],
+                ],
                 [
                     'class' => 'kartik\grid\ActionColumn',
                     'dropdown' => false,

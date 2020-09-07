@@ -42,6 +42,12 @@
                     'fecha_hora_creacion',
                     'fecha_hora_comienzo',
                     [
+                      'attribute' => 'operadores',
+                      'value'     => $model->getOperadoresConEstilo(),
+                      'label'     => 'Operadores',
+                      'format'    => 'raw'
+                    ],
+                    [
                       'attribute' => 'fecha_hora_finalizacion',
                       'value'     => $model->fecha_hora_finalizacion,
                       'label'     => 'Estado Actual',

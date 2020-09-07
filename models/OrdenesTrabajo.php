@@ -36,6 +36,8 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
     //variables para el form
     public $fecha_finalizacion, $hora_finalizacion, $fecha_comienzo, $hora_comienzo, $archivo, $comentario;
 
+    public $operadores, $estadoActual; // para grilla
+
     public $listaOperadores = [];
 
     public $listaOperadoresTexts;
@@ -56,7 +58,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             [['fecha_hora_creacion','id_usuario_crea'], 'required', 'on' =>[self::SCENARIO_CREATE]],
             [['fecha_finalizacion','hora_finalizacion','comentario'], 'required', 'on' =>[self::SCENARIO_FINALIZAR]],
             [['descripcion', 'id_historial_estado_orden_trabajo', 'id_tipo_trabajo', 'id_inmueble'], 'string'],
-            [['fecha_hora_creacion', 'fecha_hora_finalizacion','listaOperadores','comentario'], 'safe'],
+            [['estadoActual','fecha_hora_creacion', 'fecha_hora_finalizacion','listaOperadores','comentario'], 'safe'],
             [['nro_orden_trabajo'], 'string', 'max' => 50],
             [['nro_orden_trabajo'], 'string', 'max' => 100],
             [['id_ordenes_trabajo'], 'unique'],
@@ -87,6 +89,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             'hora_comienzo' => Yii::t('app', 'Hora de Comienzo'),
             'listaOperadores'  => Yii::t('app','Operadores asignados a la tarea'),
             'comentario'  => Yii::t('app','Comentario'),
+            'estadoActual'  => Yii::t('app','Estado Actual'),
         ];
     }
 
@@ -258,5 +261,33 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
      */
     public function getLabelInmueble(){
         return '<span>' . $this->getDescripcionInmueble . '</span>';
+    }
+
+    /**
+     * descripcion por relacion de tipo de trabajo
+     */
+    public function getOperadoresAplanados(){
+        $aplanados = '';
+        $operadores = $this->usuarioOrdenTrabajo;
+
+        foreach($operadores as $operador){
+            $aplanados .= $operador->usuario->persona->getApellidoNombre().', ';
+        }
+
+        return $aplanados;
+    }
+
+        /**
+     * descripcion por relacion de tipo de trabajo
+     */
+    public function getOperadoresConEstilo(){
+        $aplanados = '';
+        $operadores = $this->usuarioOrdenTrabajo;
+
+        foreach($operadores as $operador){
+            $aplanados .= '<span class="badge badge-secondary">'.$operador->usuario->persona->getApellidoNombre().'</span>';
+        }
+
+        return $aplanados;
     }
 }
