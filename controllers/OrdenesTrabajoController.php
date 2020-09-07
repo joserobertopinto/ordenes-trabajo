@@ -36,7 +36,7 @@ class OrdenesTrabajoController extends Controller
         		'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['update','create','index','view','operadores-ajax', 'pasar'],
+                        'actions' => ['update','create','index','view','operadores-ajax', 'pasar','volver'],
                         'allow' => true,
                         'roles' => ['@']
                     ],
@@ -199,36 +199,77 @@ class OrdenesTrabajoController extends Controller
     public function actionPasar($id = null, $id_estado = null)
     {
         $ok = true;
-        $model = new OrdenesTrabajo;
         $historial = new HistorialEstadoOrdenTrabajo;
 
-        if ($historial->load(Yii::$app->request->post()) && $model->load(Yii::$app->request->post())) {
-            $model->refresh();
-            $transaccion= yii::$app->db->beginTransaction();
+        if(isset($id))
+            $model = $this->findModel($id);
+        else
+            $model = $this->findModel(Yii::$app->request->post('OrdenesTrabajo')["id_ordenes_trabajo"]);;
+        
+        if($id_estado == Estado::ESTADO_FINALIZADO)
+            $model->scenario = OrdenesTrabajo::SCENARIO_FINALIZAR;
 
-            $error  = ($model->pasarEstado($historial->id_estado));
-            if(empty($error)){
-                $transaccion->commit();
-                Yii::$app->session->addFlash('success', 'Pase realizado con éxito.');
+        if ($historial->load(Yii::$app->request->post()) && $model->load(Yii::$app->request->post())) {
+            if($model->validate()){
+                $transaccion= yii::$app->db->beginTransaction();
+
+                if(isset($historial->parcial) && ($historial->parcial == '1'))
+                    $historial->id_estado = ESTADO::ESTADO_FINALIZADO_PARCIAL;
                 
-                return $this->redirect(['view', 'id' => $model->id_ordenes_trabajo]);
-            }
-            else{
-                $ok = false;
-                Yii::$app->session->addFlash('danger', $error);
-                $transaccion->rollBack();
-            }
+                $error  = ($model->pasarEstado($historial->id_estado));
+                
+                if(empty($error)){
+                    $transaccion->commit();
+
+                    Yii::$app->session->addFlash('success', 'Pase realizado con éxito.');
+                    
+                    return $this->redirect(['view', 'id' => $model->id_ordenes_trabajo]);
+                }
+                else
+                    $transaccion->rollback();
+            }else
+                $error = ModelUtil::aplanarErrores($model);
+
+            $ok = false;
+            Yii::$app->session->addFlash('danger', $error);
+            
         }
 
-        $model = $this->findModel($id);
-        $historial->id_estado = $id_estado;
-        
+        $historial->id_estado = !is_null($id_estado)?$id_estado : $historial->id_estado;
+
         $response['ok'] = $ok;
         $response['html']= $this->renderAjax('_formPasar',['model' => $model, 'historial' => $historial]);
-        $response['titulo'] = 'Pasar a '. $historial->estado->descripcion;
+        $response['titulo'] = 'Pasar a '. Estado::getEstadoLabelById($historial->id_estado);
         
         return  json_encode($response);
 
+    }
+
+    /**
+     * vuelvo tarea a estado anterior
+     */
+    public function actionVolver($id){
+        
+        $model = $this->findModel($id);
+        $historialCompleto = $model->historialEstadoOrdenTrabajo;
+        $ultimoHistorial = $model->ultimoEstadoOrdenTrabajo;
+        $anteUltimoHistorial = $historialCompleto[1]->id_historial_estado_orden_trabajo;
+        
+        $transaccion= yii::$app->db->beginTransaction();
+        
+        $model->id_historial_estado_orden_trabajo = $anteUltimoHistorial;
+        
+        if($model->save() && $ultimoHistorial->delete()){
+            $transaccion->commit();
+            Yii::$app->session->addFlash('success', 'Pase realizado con éxito.');
+
+        }else{
+            $transaccion->rollBack();
+            Yii::$app->session->addFlash('danger', 'No se pudo realizar el pase.<br>'.ModeloUtil::aplanarErrores($model).'<br>'.ModelUtil::aplanarErrores($ultimoHistorial));
+        }
+
+        return $this->redirect(['view', 'id' => $model->id_ordenes_trabajo]);
+        
     }
 
     /**

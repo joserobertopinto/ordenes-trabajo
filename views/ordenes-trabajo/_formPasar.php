@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use kartik\alert\Alert;
+use app\models\Estado;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Historial */
@@ -43,7 +44,27 @@ use kartik\alert\Alert;
 
     <?= $form->field($historial, 'id_estado')->hiddenInput(['id' => 'id-estado-for-pase'])->label(false) ?>
 
-    <?= $form->field($historial, 'observacion', ['labelOptions' => [ 'class' => 'control-label bmd-label-floating' ]])->textInput() ?>
+    <?= $form->field($model, 'comentario', ['labelOptions' => [ 'class' => 'control-label bmd-label-floating' ]])->textInput() ?>
+
+    <?php if($historial->id_estado == Estado::ESTADO_FINALIZADO){?>
+        <br>
+
+        <?= $form->field($historial, 'parcial', ['labelOptions' => [ 'class' => 'control-label bmd-label-floating' ]])->checkBox() ?>
+        
+        <br>
+
+        <div class="row">
+            <div class="col-md-4">
+                <?= $form->field($model, 'fecha_finalizacion')->textInput(['type' => 'date']) ?>
+            </div>
+            <div class="col-md-4">
+                <?= $form->field($model, 'hora_finalizacion')->textInput(['type' => 'time']) ?>
+            </div>
+        </div>
+
+        <br>
+    <?php } ?>
+
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Pasar Orden'), ['class' => 'btn btn-success', 'id' => 'submit-modal-pase']) ?>
@@ -55,6 +76,10 @@ use kartik\alert\Alert;
 
 <?php
     $this->registerJs('
+        $(document).ready(function(){
+            //agrego color a los mensajes de validación
+            $(".help-block").addClass("text-danger");
+        });
         $("#id-form-pase").submit(function(e) {
             e.preventDefault();    
             var formData = new FormData(this);
@@ -68,10 +93,10 @@ use kartik\alert\Alert;
                 data: formData,
                 success: function (data) {
                     var json = JSON.parse(data);
-                    $(".paseModalContent").html( json.html );
-                    $("#paseModal").modal("show");
-                    if(json.ok)
-                        $("#pase-descripcion").val("");
+                    $(".pasarModalContent").html( json.html );
+                    //$("#pasarModal-label").html(json.titulo);
+                    $("#pasarModal").modal("show");
+                    return false;
                 },
                 cache: false,
                 contentType: false,

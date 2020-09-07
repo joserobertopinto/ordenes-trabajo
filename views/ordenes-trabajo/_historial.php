@@ -5,6 +5,7 @@ use kartik\helpers\Html;
 use yii\helpers\Url;
 use app\common\utils\Permiso;
 use app\models\Estado;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Solicitud */
@@ -22,7 +23,7 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 }
 
 </style>
-
+<?php Pjax::begin(['id' => 'id_content-time-line-estados']); ?>
 <ul class="timeline">
 	<?php 
 	
@@ -49,13 +50,16 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 				<div class="timeline-body">
 					
 					<?php echo 'Transferido por: <b>' . $item->usuario->persona->getApellidoNombre() . '</b> ';?>
-					<?php echo '<br><span>Observación<span>: <b>'.$item->observacion.'</b>'; ?>
+					<?php echo '<br><span>Comentario<span>: <b>'.$item->observacion.'</b>'; ?>
 					
 					<?php if($item->id_historial_estado_orden_trabajo == $model->ultimoEstadoOrdenTrabajo->id_historial_estado_orden_trabajo){ ?>
 						<?php if($item->showButtonAnterior()){?>
 							<button 
 								type="button" 
-								title='Volver a <?= $item->estado->getEstadoLabel($item->estado->getEstadoAnterior()); ?>' 
+								title='Volver a <?= $item->estado->getEstadoLabel($item->estado->getEstadoAnterior()); ?>'
+								rel = ""
+								pregunta = "Desea volver la tarea al estado anterior?"
+								class = "btn-volver-estado"
 								style="float: right; border: 0px;background: transparent;color:#9d36b3">
 								<i class="fa fa-arrow-down"></i>
 							</button>
@@ -63,7 +67,7 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 						<?php if($item->showButtonProximo()){ ?>
 							<button 
 								type="button" 
-								title='Pasar a <?= $item->estado->getEstadoLabel($estadoProximo()); ?>'
+								title='Pasar a <?= $item->estado->getEstadoLabel($item->estado->getEstadoProximo()); ?>'
 								style="float: right; border: 0px;background: transparent;color:#9d36b3;">
 								<i class="fa fa-arrow-up btn-pasar"></i>
 							</button>
@@ -80,6 +84,8 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 	</li>	
 </ul>
 
+<?php Pjax::end(); ?>
+
 <!-- MODAL PARA PASAR ESTADO -->
 <?php
     yii\bootstrap4\Modal::begin([
@@ -93,33 +99,74 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 ?>
 <!-- FIN MODAL -->
 
+<!-- MODAL PARA CONFIRMAR -->
+<?php
+    yii\bootstrap4\Modal::begin([
+        'title'=>'Confirmar ',
+        'id'=>'confirmarModal',
+        'class' =>'modal',
+        'size' => yii\bootstrap4\Modal::SIZE_DEFAULT,
+    ]);
+	echo "<div class='confirmaModalContent'>
+		<div id='modalPregunta'></div>
+		<div class='card-footer'>
+		<button class='btn btn-default' data-dismiss='modal' type='button'>Cancelar</button>
+		<button class='btn btn-primary btn-confirmar' type='button'>Aceptar</button>
+		</div>
+	</div>";
+    yii\bootstrap4\Modal::end();
+?>
+<!-- FIN MODAL -->
+
+
 <?php
 	$urlPase = Url::to([
 		'ordenes-trabajo/pasar',
 		'id' => $model->id_ordenes_trabajo,
 		'id_estado' => $model->ultimoEstadoOrdenTrabajo->estado->getEstadoProximo(),
 		]);
-  	$js = '//open modal alta archivos
-          $(".btn-pasar").on("click", function(){
-              url = "'.$urlPase.'"
-              $.post( url, function( data ) {
-                  var json = JSON.parse(data);
-				  $(".pasarModalContent").html( json.html );
-				  $("#pasarModal-label").html(json.titulo);
-                  $("#pasarModal").modal("show");
-              });
-          });
-        //   $("#pasarModal").on("hidden.bs.modal", function () {
-        //       $.pjax.reload({container:"#w1-pjax"});
-        //   });
-      ';
+
+	$urlVolver = Url::to([
+		'ordenes-trabajo/volver',
+		'id' => $model->id_ordenes_trabajo,
+		]);
+
+  	$js = '//open modal pasar estado
+			$(".btn-pasar").on("click", function(){
+				url = "'.$urlPase.'"
+				$.post( url, function( data ) {
+					var json = JSON.parse(data);
+					$(".pasarModalContent").html( json.html );
+					$("#pasarModal-label").html(json.titulo);
+					$("#pasarModal").modal("show");
+				});
+			});
+			
+			$(".btn-volver-estado").on("click", function(){
+				$("#modalPregunta").html($(this).attr("pregunta") );
+				$("#confirmarModal").modal("show");
+			});
+
+			$(".btn-confirmar").on("click", function(){
+				url = "'.$urlVolver.'";
+				$.post( url, function( data ) {
+					$("#confirmarModal").modal("hidden");
+				});
+			});
+		  ';
 
   $this->registerJS($js);
 
   $css = '
           #w1-filters, thead{
               display:none;
-          }
+		  }
+		  #modalPregunta{
+			text-align: center;
+			margin:40px;
+			font-size: 16px;
+		  }
+		  
   ';
   $this->registerCss($css);
 ?>

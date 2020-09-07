@@ -227,3 +227,9 @@ a.desc:after {
 .timeline-inverse>li>.timeline-item>.timeline-header {
     border-bottom-color:#ddd
 }
+.material-icons{
+    font-size: 16px !important;
+}
+.fa-arrow-up, .fa-arrow-down{
+    font-size: 20px !important;
+}

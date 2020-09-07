@@ -25,15 +25,16 @@ use app\models\Inmueble;
  */
 class OrdenesTrabajo extends \yii\db\ActiveRecord
 {
-    const SCENARIO_CREATE   = 'scenario_create';
-    const SCENARIO_UPDATE   = 'scenario_update';
+    const SCENARIO_CREATE       = 'scenario_create';
+    const SCENARIO_UPDATE       = 'scenario_update';
+    const SCENARIO_FINALIZAR    = 'scenario_finalizar';
 
     /**
      * {@inheritdoc}
      */
     
     //variables para el form
-    public $fecha_finalizacion, $hora_finalizacion, $fecha_comienzo, $hora_comienzo, $archivo;
+    public $fecha_finalizacion, $hora_finalizacion, $fecha_comienzo, $hora_comienzo, $archivo, $comentario;
 
     public $listaOperadores = [];
 
@@ -53,8 +54,9 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             [['fecha_comienzo','hora_comienzo','titulo', 'descripcion', 'id_tipo_trabajo', 'id_inmueble'], 'required', 'on' =>[self::SCENARIO_UPDATE]],
             [['titulo', 'descripcion', 'id_tipo_trabajo', 'id_inmueble','nro_orden_trabajo'], 'safe', 'on' =>[self::SCENARIO_CREATE]],
             [['fecha_hora_creacion','id_usuario_crea'], 'required', 'on' =>[self::SCENARIO_CREATE]],
+            [['fecha_finalizacion','hora_finalizacion','comentario'], 'required', 'on' =>[self::SCENARIO_FINALIZAR]],
             [['descripcion', 'id_historial_estado_orden_trabajo', 'id_tipo_trabajo', 'id_inmueble'], 'string'],
-            [['fecha_hora_creacion', 'fecha_hora_finalizacion','listaOperadores'], 'safe'],
+            [['fecha_hora_creacion', 'fecha_hora_finalizacion','listaOperadores','comentario'], 'safe'],
             [['nro_orden_trabajo'], 'string', 'max' => 50],
             [['nro_orden_trabajo'], 'string', 'max' => 100],
             [['id_ordenes_trabajo'], 'unique'],
@@ -84,6 +86,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             'fecha_comienzo' => Yii::t('app', 'Fecha de Comienzo'),
             'hora_comienzo' => Yii::t('app', 'Hora de Comienzo'),
             'listaOperadores'  => Yii::t('app','Operadores asignados a la tarea'),
+            'comentario'  => Yii::t('app','Comentario'),
         ];
     }
 
@@ -146,6 +149,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
         $historialOrden->id_usuario = Yii::$app->user->identity->id_usuario;
         $historialOrden->fecha_hora = Date('Y-m-d H:i:s');
         $historialOrden->id_ordenes_trabajo = $this->id_ordenes_trabajo;
+        $historialOrden->observacion = $this->comentario;
 
         if (!$historialOrden->save())
             $error = 'No se pudo guardar el nuevo Historial.<BR>'.ModelUtil::aplanarErrores($historialOrden);

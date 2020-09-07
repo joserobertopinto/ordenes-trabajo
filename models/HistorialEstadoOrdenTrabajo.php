@@ -19,6 +19,8 @@ use app\models\User;
  */
 class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
 {
+    public $parcial;
+
     /**
      * {@inheritdoc}
      */
@@ -35,7 +37,7 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
         return [
             [['id_estado', 'fecha_hora', 'id_ordenes_trabajo'], 'required'],
             [['id_historial_estado_orden_trabajo', 'id_estado', 'id_usuario', 'id_ordenes_trabajo'], 'string'],
-            [['fecha_hora'], 'safe'],
+            [['fecha_hora','parcial'], 'safe'],
             [['observacion'], 'string', 'max' => 512],
             [['id_historial_estado_orden_trabajo'], 'unique'],
             [['id_estado'], 'exist', 'skipOnError' => true, 'targetClass' => Estado::className(), 'targetAttribute' => ['id_estado' => 'id_estado']],
@@ -53,8 +55,9 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
             'id_estado' => Yii::t('app', 'Id Estado'),
             'id_usuario' => Yii::t('app', 'Id Usuario'),
             'fecha_hora' => Yii::t('app', 'Fecha Hora'),
-            'observacion' => Yii::t('app', 'Observacion'),
+            'observacion' => Yii::t('app', 'Comentario'),
             'id_ordenes_trabajo' => Yii::t('app', 'Id Ordenes Trabajo'),
+            'parcial' => Yii::t('app', 'Parcialmente Finalizada'),
         ];
     }
 
