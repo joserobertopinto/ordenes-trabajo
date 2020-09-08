@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use app\common\utils\Permiso;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -27,14 +28,19 @@ use yii\helpers\Html;
                   </p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                  <!-- <a class="dropdown-item" href="#">Salir</a>
-                  <a class="dropdown-item" href="#">Settings</a> -->
+                  <div tabindex="-1" class="noti-title dropdown-header" style="text-align:center">
+                    <h6 class="text-overflow m-0"><?= (Yii::$app->user->identity->persona->getApellidoNombre()); ?></h6>
+                    <h7 class="text-overflow m-0"><?= ((Permiso::esUsuarioSupervisor())?'Supervisor':'Operador'); ?></h7>
+                  </div>
+                  <div tabindex="-1" class="noti-title dropdown-header">
+                    <h8 class="text-overflow m-0" style="text-align:center"><?= (Yii::$app->user->identity->persona->organismo->descripcion); ?></h8>
+                  </div>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="#" style="padding: 0;">
                     <?php
                     echo Html::beginForm(['/site/logout'], 'post');
                     echo Html::submitButton(
-                        'Salir',
+                        'Salir (' . Yii::$app->user->identity->username . ')',
                         ['class' => 'btn btn-link logout']
                     );
                     echo Html::endForm();
@@ -47,3 +53,4 @@ use yii\helpers\Html;
         </div>
       </nav>
   <!-- End Navbar -->
+n
