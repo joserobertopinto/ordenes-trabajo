@@ -233,3 +233,7 @@ a.desc:after {
 .fa-arrow-up, .fa-arrow-down{
     font-size: 20px !important;
 }
+
+.logout:hover {
+    color: white!important;
+}
