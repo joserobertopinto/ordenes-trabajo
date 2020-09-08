@@ -19,13 +19,12 @@
     <div class='card'>
     <div class="card-header-info">
             <h4 class="card-title"><?= strtoupper(Html::encode($model->titulo)) ?>
-            
-                <button class="btn-header-card" rel=<?= $urlEdit ?> type="button" title="Eliminar Orden"><i class="material-icons">delete</i></button>
-
-                <?= Html::a('<i class="material-icons">edit</i></i>',
-                $urlEdit,
-                ['title'=>Yii::t('app', 'Editar Orden'), 'class' => 'btn-header-card']); ?>
-            
+                <?php if($model->puedeEditarOrden()){ ?>
+                  <button class="btn-header-card" rel=<?= $urlEdit ?> type="button" title="Eliminar Orden"><i class="material-icons">delete</i></button>
+                  <?= Html::a('<i class="material-icons">edit</i></i>',
+                  $urlEdit,
+                  ['title'=>Yii::t('app', 'Editar Orden'), 'class' => 'btn-header-card']); ?>
+                <?php } ?>
             </h4>
             <p class="card-category"><?= 'Orden Nro: '.$model->nro_orden_trabajo ?></p>
     </div>

@@ -6,6 +6,7 @@ use Yii;
 use app\models\Archivo;
 use app\common\utils\ModelUtil;
 use app\common\utils\Fecha;
+use app\common\utils\Permiso;
 use app\models\OrdenAnioNro;
 use app\models\UsuarioOrdenTrabajo;
 use app\models\TipoTrabajo;
@@ -304,5 +305,19 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
 
         return $salida;
     }
+
+    /**
+     * puede editar orden creada
+     */
+
+     public function puedeEditarOrden(){
+        $salida = false;
+        
+        if(Permiso::puedeEditarOrden())
+            $salida = true;
+
+        return $salida;
+
+     }
     
 }
