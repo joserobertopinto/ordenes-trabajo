@@ -34,9 +34,9 @@
             <?=
             DetailView::widget([
                 'model' => $model,
-                'options' => [
-                    'class' => 'detail-view table-bordered'
-                ],
+                // 'options' => [
+                //     'class' => 'detail-view table-bordered'
+                // ],
                 'attributes' => [
                     'descripcion:ntext',
                     'fecha_hora_creacion',

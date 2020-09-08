@@ -169,9 +169,13 @@ use yii\web\JsExpression;
         $this->registerJS($js);
 
         $css = '
-                #w1-filters, thead{
-                    display:none;
-                }
+            #w1-filters, thead{
+                display:none;
+            }
+            .select2-selection__clear{
+                position : absolute!important;
+            }
         ';
+        
         $this->registerCss($css);
     ?>

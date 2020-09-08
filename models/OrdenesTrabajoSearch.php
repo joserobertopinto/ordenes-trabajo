@@ -6,6 +6,7 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\OrdenesTrabajo;
 use app\common\utils\Permiso;
+use app\common\utils\Fecha;
 
 /**
  * OrdenesTrabajoSearch represents the model behind the search form of `app\models\OrdenesTrabajo`.
@@ -18,7 +19,7 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
     public function rules()
     {
         return [
-            [['id_ordenes_trabajo', 'nro_orden_trabajo', 'fecha_hora_creacion', 'fecha_hora_finalizacion', 'descripcion', 'id_historial_estado_orden_trabajo', 'id_tipo_trabajo', 'id_inmueble','titulo','estadoActual'], 'safe'],
+            [['operadores','id_ordenes_trabajo', 'nro_orden_trabajo', 'fecha_hora_creacion', 'fecha_hora_finalizacion', 'descripcion', 'id_tipo_trabajo', 'id_inmueble','titulo','estadoActual','fecha_hora_comienzo'], 'safe'],
         ];
     }
 
@@ -56,26 +57,30 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'fecha_hora_creacion' => $this->fecha_hora_creacion,
-            'fecha_hora_finalizacion' => $this->fecha_hora_finalizacion,
-        ]);
-
         $query->andFilterWhere(['=', 'id_ordenes_trabajo', $this->id_ordenes_trabajo])
             ->andFilterWhere(['ilike', 'nro_orden_trabajo', $this->nro_orden_trabajo])
             ->andFilterWhere(['ilike', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['=', 'id_historial_estado_orden_trabajo', $this->id_historial_estado_orden_trabajo])
             ->andFilterWhere(['=', 'id_tipo_trabajo', $this->id_tipo_trabajo])
             ->andFilterWhere(['=', 'id_inmueble', $this->id_inmueble]);
 
+        if(!empty($this->operadores))
+            $query->joinWith(['usuarioOrdenTrabajo'])
+                ->andWhere(['IN', 'usuario_orden_trabajo.id_usuario', $this->operadores]);
+
         if(!empty($this->estadoActual))
             $query->joinWith(['ultimoEstadoOrdenTrabajo'])
-                ->andFilterWhere(['=', 'id_estado', $this->estadoActual]);
-        
-        // if(!empty($this->estadoActual))
-        //     $query->joinWith(['ultimoEstadoOrdenTrabajo'])
-        //         ->andFilterWhere(['=', 'id_tipo_trabajo', $this->estadoActual]);
+                ->andWhere(['=', 'historial_estado_orden_trabajo.id_estado', $this->estadoActual]);
+    
+        /*-------------------------RANGO DE FECHAS INICIO-----------------*/
+        if (!empty($this->fecha_hora_comienzo) && strpos($this->fecha_hora_comienzo, ' - ') !== false) {
+            
+            list($start_date, $end_date) = explode(' - ', $this->fecha_hora_comienzo);
+            $start_date = Fecha::convertir($start_date);
+            $end_date   = Fecha::convertir($end_date);
+
+            $query->andFilterWhere(['between', 'fecha_hora_comienzo', $start_date, $end_date]);
+        }
+        /*------------------------------------------------------------------*/
 
         /**
          * agrego filtro operador

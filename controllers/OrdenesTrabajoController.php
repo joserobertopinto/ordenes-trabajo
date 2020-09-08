@@ -221,7 +221,7 @@ class OrdenesTrabajoController extends Controller
                 if(empty($error)){
                     $transaccion->commit();
 
-                    Yii::$app->session->addFlash('success', 'Pase realizado con éxito.');
+                    Yii::$app->session->addFlash('success', 'Se ha cambiado el estado de la orden con éxito.');
                     
                     return $this->redirect(['view', 'id' => $model->id_ordenes_trabajo]);
                 }
@@ -265,7 +265,7 @@ class OrdenesTrabajoController extends Controller
 
         }else{
             $transaccion->rollBack();
-            Yii::$app->session->addFlash('danger', 'No se pudo realizar el pase.<br>'.ModeloUtil::aplanarErrores($model).'<br>'.ModelUtil::aplanarErrores($ultimoHistorial));
+            Yii::$app->session->addFlash('danger', 'No se pudo realizar el cambio de estado.<br>'.ModeloUtil::aplanarErrores($model).'<br>'.ModelUtil::aplanarErrores($ultimoHistorial));
         }
 
         return $this->redirect(['view', 'id' => $model->id_ordenes_trabajo]);

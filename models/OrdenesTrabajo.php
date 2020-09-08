@@ -274,10 +274,10 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             $aplanados .= $operador->usuario->persona->getApellidoNombre().', ';
         }
 
-        return $aplanados;
+        return substr($aplanados, 0, -2);
     }
 
-        /**
+     /**
      * descripcion por relacion de tipo de trabajo
      */
     public function getOperadoresConEstilo(){
@@ -290,4 +290,19 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
 
         return $aplanados;
     }
+
+    /**
+     * lista de todos lo operadores para Select2
+     */
+    public static function getAllOperadoresForSelect2(){
+        $salida = [];
+        $operadores = Persona::find()->joinWith(['usuario'])->all();
+
+        foreach($operadores as $operador){
+            $salida [$operador->usuario->id_usuario] =  $operador->getApellidoNombre();
+        }
+
+        return $salida;
+    }
+    
 }
