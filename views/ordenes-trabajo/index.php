@@ -48,8 +48,9 @@ $urlNew = Yii::$app->urlManager->createUrl(['ordenes-trabajo/create']);
                 ],
                 [
                     'attribute' => 'id_tipo_trabajo',
-                    'value'     => function($model){ return $model->tipoTrabajo->descripcion;},
+                    'value'     => function($model){ return isset($model->tipoTrabajo)?$model->tipoTrabajo->descripcion : '<span class="not-set">(no definido)</span>';},
                     'filter'    =>  ArrayHelper::map(TipoTrabajo::find()->all(), 'id_tipo_trabajo', 'descripcion'),
+                    'format'    => 'raw',
                     'filterType'=>  GridView::FILTER_SELECT2,
                     'filterWidgetOptions'=>[
                         'hideSearch'=>true,
