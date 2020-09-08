@@ -233,14 +233,14 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
      * descripcion por relacion de tipo de trabajo
      */
     public function getDescripcionTipoTrabajo(){
-        return $this->tipoTrabajo->descripcion;
+        return isset($this->tipoTrabajo) ? $this->tipoTrabajo->descripcion : NULL;
     }
 
     /**
      * descripcion por relacion de tipo de trabajo
      */
     public function getDescripcionInmueble(){
-        return $this->inmueble->descripcion;
+        return isset( $this->inmueble) ? $this->inmueble->descripcion : NULL;
     }
 
     /**
