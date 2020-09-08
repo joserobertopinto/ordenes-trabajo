@@ -18,7 +18,7 @@ class Estado extends \yii\db\ActiveRecord
     const ESTADO_FINALIZADO         = '27ab5c71-a7b4-411b-bba4-4d4a98efcfc0';	//FINALIZADO
     const ESTADO_FINALIZADO_PARCIAL = 'cac4692d-9d34-4509-beb8-f0799c5fb256';	//FINALIZADO_PARCIAL
 
-    public $orden = [0 => self::ESTADO_BORRADOR, 1 => self::ESTADO_PENDIENTE, 2 => self::ESTADO_EN_PROGRESO,  3 => self::ESTADO_FINALIZADO,  4 => self::ESTADO_FINALIZADO_PARCIAL];
+    public $orden = [0 => self::ESTADO_PENDIENTE, 1 => self::ESTADO_EN_PROGRESO,  2 => self::ESTADO_FINALIZADO,  3 => self::ESTADO_FINALIZADO_PARCIAL];
 
     /**
      * {@inheritdoc}
@@ -100,7 +100,10 @@ class Estado extends \yii\db\ActiveRecord
         $indiceActual   = array_search($this->id_estado,$this->orden);
 
         if($indiceActual != array_key_first($this->orden))
-            $anterior = $indiceActual - 1;
+            if($indiceActual == array_key_last($this->orden))
+                $anterior = $indiceActual - 2;
+            else
+                $anterior = $indiceActual - 1;
         else 
             $anterior = NULL;
         
