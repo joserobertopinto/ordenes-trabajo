@@ -78,6 +78,14 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
     }
 
     /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getOrdenesTrabajo()
+    {
+        return $this->hasOne(OrdenesTrabajo::className(), ['id_ordenes_trabajo' => 'id_ordenes_trabajo']);
+    }
+
+    /**
      * Para time-line
      * 
      * */
@@ -91,5 +99,17 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
 
     public function showButtonAnterior(){
         return (!is_null($this->estado->getEstadoAnterior()));
+    }
+
+    /**
+     * 
+     */
+    public function mostrarEstado(){
+        $salida = true;
+        
+        if($this->id_estado ==  Estado::ESTADO_BORRADOR && $this->ordenesTrabajo->id_usuario_crea != User::getCurrentUserId() )
+            $salida = false;
+
+        return $salida;
     }
 }

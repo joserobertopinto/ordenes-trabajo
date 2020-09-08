@@ -127,6 +127,13 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
     }
 
     /**
+     * id usuario loageado
+     */
+    public static function getCurrentUserId(){
+        return \Yii::$app->user->identity->id_usuario;
+    }
+
+    /**
      * @inheritdoc
      */
     public function getId()
