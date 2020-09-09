@@ -227,7 +227,7 @@ a.desc:after {
 .timeline-inverse>li>.timeline-item>.timeline-header {
     border-bottom-color:#ddd
 }
-.material-icons{
+.btn-header-card .material-icons, .card-header-tabs .material-icons{
     font-size: 16px !important;
 }
 .fa-arrow-up, .fa-arrow-down{
@@ -236,4 +236,12 @@ a.desc:after {
 
 .logout:hover {
     color: white!important;
+}
+
+.card-stats h4{
+    font-size: 1.5625rem;
+}
+
+.content {
+    margin-top: 30px!important;
 }
