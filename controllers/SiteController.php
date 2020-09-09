@@ -7,8 +7,13 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\OrdenesTrabajo;
+use app\models\Estado;
+use app\models\User;
+use app\common\utils\Permiso;
 
 class SiteController extends Controller
 {
@@ -66,7 +71,52 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $queryAsignadas = OrdenesTrabajo::find()
+            ->joinWith(['ultimoEstadoOrdenTrabajo'])
+            ->where(['=', 'historial_estado_orden_trabajo.id_estado', Estado::ESTADO_PENDIENTE])
+            ->orderBy('fecha_hora_comienzo DESC')
+            ->limit(10);
+        
+        if(Permiso::esUsuarioOperador())
+            $queryAsignadas
+                ->joinWith(['usuarioOrdenTrabajo'])
+                ->andWhere(['=', 'usuario_orden_trabajo.id_usuario', User::getCurrentUserId()]);
+
+        $dataProviderAsignadas = new ActiveDataProvider([
+            'query' => $queryAsignadas
+        ]);
+
+        /************************************************************************************* */
+
+
+        $queryFinalizadas = OrdenesTrabajo::find()
+        ->joinWith(['ultimoEstadoOrdenTrabajo'])
+        ->where(['OR', "historial_estado_orden_trabajo.id_estado = '" . Estado::ESTADO_FINALIZADO . "'"," historial_estado_orden_trabajo.id_estado = '" . Estado::ESTADO_FINALIZADO_PARCIAL . "'"])
+        ->orderBy('fecha_hora_comienzo DESC')
+        ->limit(10);
+        
+        if(Permiso::esUsuarioOperador())
+            $queryFinalizadas
+                ->joinWith(['usuarioOrdenTrabajo'])
+                ->andWhere(['=', 'usuario_orden_trabajo.id_usuario', User::getCurrentUserId()]);
+
+        $dataProviderFinalizadas = new ActiveDataProvider([
+            'query' => $queryFinalizadas,
+        ]);
+
+        /************************************************************************************ */
+        // tareas asignadas con fecha de comienzo menor al actual
+        $asignadas = OrdenesTrabajo::find()->count();
+        
+        // tareas asignadas con fecha de comienzo menor al actual
+        $asignadasSinComenzar = OrdenesTrabajo::find()->count();
+
+        return $this->render('index',[
+            'asignadasSinComenzar'      => $asignadasSinComenzar, 
+            'asignadas'                 => $asignadas,
+            'dataProviderAsignadas'     => $dataProviderAsignadas,
+            'dataProviderFinalizadas'   => $dataProviderFinalizadas,
+        ]);
     }
 
     /**
