@@ -7,7 +7,7 @@ use app\common\utils\Permiso;
 ?>
 
   <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+      <nav class="navbar navbar-expand-lg head-navbar-custom">
         <div class="container-fluid">
           <div class="navbar-wrapper">
             <a class="navbar-brand" href="#"><?= $this->title?></a>
@@ -53,4 +53,3 @@ use app\common\utils\Permiso;
         </div>
       </nav>
   <!-- End Navbar -->
-n

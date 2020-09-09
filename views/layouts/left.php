@@ -26,16 +26,22 @@
     </div>
     <div class="sidebar-wrapper">
         <ul class="nav">
-            <li class="nav-item active  ">
+            <li class="nav-item">
             <a class="nav-link" href="/ordenes-trabajo">
                 <i class="material-icons">dashboard</i>
                 <p>Inicio</p>
             </a>
             </li>
             <li class="nav-item ">
-                <a class="nav-link" href="ordenes-trabajo">
+                <a class="nav-link" href="<?=Yii::$app->urlManager->createUrl(['ordenes-trabajo/index']);?>">
                 <i class="material-icons">assignment</i>
                 <p>Lista de Operaciones</p>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="./permit/access/role">
+                <i class="material-icons">supervisor_account</i>
+                <p>Seguridad</p>
                 </a>
             </li>
         </ul>
@@ -43,3 +49,16 @@
     </div>
     <div class="sidebar-background" style="background-image: url(<?= $img ?>) "></div>
 </div>
+
+<?php
+    $this->registerJs("
+    $(function(){
+        $('.nav a').filter(function(){
+            return this.href==location.href}).parent().addClass('active').siblings().removeClass('active');
+
+        $('.nav a').click(function(){
+            $(this).parent().addClass('active').siblings().removeClass('active')    
+            });
+        });
+    ");
+?>
