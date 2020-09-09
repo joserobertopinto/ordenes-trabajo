@@ -179,7 +179,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
 
             $numeroOrden = OrdenAnioNro::getProximoNumero($anio);
             
-            $this->nro_orden_trabajo =  $anio.'-'.str_pad($numeroOrden, 5, "0", STR_PAD_LEFT);
+            $this->nro_orden_trabajo =  str_pad($numeroOrden, 6, "0", STR_PAD_LEFT) .'-' . $anio;
 
         }
     }
