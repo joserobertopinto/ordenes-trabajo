@@ -1,5 +1,5 @@
 <?php
-$postgres_ip    = '192.168.1.8';
+$postgres_ip    = '*';
 $postgres_db    = 'local';
 $postgres_user  = 'demo';
 $postgres_pwd   = 'demo123';
