@@ -66,7 +66,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 </span>
                 <span class="bmd-form-group">
                     <div class="input-group">
-                        <?= $form->field($model, 'rememberMe')->checkbox() ?>
+                        &nbsp;
+                        <?php //echo $form->field($model, 'rememberMe')->checkbox() ?>
                     </div>
                 </span>
             </div>
