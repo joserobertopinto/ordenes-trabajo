@@ -33,17 +33,23 @@
             <?=
             DetailView::widget([
                 'model' => $model,
-                // 'options' => [
-                //     'class' => 'detail-view table-bordered'
-                // ],
+                'options' => [
+                    'class' => 'table detail-view table-custom'
+                ],
                 'attributes' => [
                     'descripcion:ntext',
                     'fecha_hora_creacion',
                     'fecha_hora_comienzo',
                     [
+                      'attribute' => 'id_usuario_asignado',
+                      'value'     => $model->getAsignadoConEstilo(),
+                      'label'     => 'Usuario Asignado',
+                      'format'    => 'raw'
+                    ],
+                    [
                       'attribute' => 'operadores',
                       'value'     => $model->getOperadoresConEstilo(),
-                      'label'     => 'Operadores',
+                      'label'     => 'Responsables de la tarea',
                       'format'    => 'raw'
                     ],
                     [

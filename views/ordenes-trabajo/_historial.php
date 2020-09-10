@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use app\common\utils\Permiso;
 use app\models\Estado;
 use yii\widgets\Pjax;
+use app\models\User;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Solicitud */
@@ -73,6 +74,14 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 									<i class="fa fa-arrow-up btn-pasar"></i>
 								</button>
 							<?php } ?>
+							<?php if($item->showButtonAsignarme()){ ?>
+								<button 
+									type="button" 
+									title='Tomar Orden'
+									style="float: right; border: 0px;background: transparent;color:#9d36b3;">
+									<i class="fa fa-hand-paper-o btn-tomar-tarea"></i>
+								</button>
+							<?php } ?>
 						<?php } ?>
 					
 					</div>
@@ -122,6 +131,7 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 
 
 <?php
+
 	$urlPase = Url::to([
 		'ordenes-trabajo/pasar',
 		'id' => $model->id_ordenes_trabajo,
@@ -132,6 +142,12 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 		'ordenes-trabajo/volver',
 		'id' => $model->id_ordenes_trabajo,
 		]);
+	
+	$urlTomarTarea = Url::to([
+		'ordenes-trabajo/tomar-tarea',
+		'id' => $model->id_ordenes_trabajo,
+		'id_usuario' => User::getCurrentUserId(),
+	]);
 
   	$js = '//open modal pasar estado
 			$(".btn-pasar").on("click", function(){
@@ -155,7 +171,18 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 					$("#confirmarModal").modal("hidden");
 				});
 			});
-		  ';
+
+			$(".btn-tomar-tarea").on("click", function(){
+				url = "'.$urlTomarTarea.'"
+				$.post( url, function( data ) {
+					// var json = JSON.parse(data);
+					// $(".pasarModalContent").html( json.html );
+					// $("#pasarModal-label").html(json.titulo);
+					// $("#pasarModal").modal("show");
+				});
+			});
+	  ';
+		  
 
   $this->registerJS($js);
 

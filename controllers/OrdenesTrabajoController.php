@@ -11,8 +11,10 @@ use app\models\Archivo;
 use app\models\ArchivoSearch;
 use app\models\Estado;
 use app\models\Persona;
+use app\models\User;
 use app\models\UsuarioOrdenTrabajo;
 use app\models\HistorialEstadoOrdenTrabajo;
+use app\models\Modificaciones;
 use app\common\utils\Permiso;
 use app\common\utils\Fecha;
 use yii\web\Controller;
@@ -36,7 +38,7 @@ class OrdenesTrabajoController extends Controller
         		'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['update','create','index','view','operadores-ajax', 'pasar','volver'],
+                        'actions' => ['update','create','index','view','operadores-ajax', 'pasar','volver', 'tomar-tarea'],
                         'allow' => true,
                         'roles' => ['@']
                     ],
@@ -272,6 +274,40 @@ class OrdenesTrabajoController extends Controller
         
     }
 
+     /**
+     * vuelvo tarea a estado anterior
+     */
+    public function actionTomarTarea($id, $id_usuario){
+        
+        $model = $this->findModel($id);
+
+        $transaccion= yii::$app->db->beginTransaction();
+
+        $descripcion = 'Asignación de tarea al usuario '. User::findOne($id_usuario)->username;
+
+        $error = $this->_guardarModificacion($id,$descripcion);
+        
+        if(empty($error)){
+            $model->id_usuario_asignado = $id_usuario;
+    
+            if($model->save()){
+                $transaccion->commit();
+                Yii::$app->session->addFlash('success', 'Orden de trabajo asignada.');
+            }else{
+                $transaccion->rollback();
+                Yii::$app->session->addFlash('danger', 'No se pudo asignada.<br>'.ModelUtil::aplanarErrores($model));
+            }
+    
+        }else{
+            $transaccion->rollBack();
+            Yii::$app->session->addFlash('danger', 'No se pudo asignada.<br>'.$error);
+        }
+
+        return $this->redirect(['view', 'id' => $id]);
+        
+    }
+
+
     /**
     * Busqueda de Persona.
     * @param string $q cadena de texto a buscar por like.
@@ -348,6 +384,20 @@ class OrdenesTrabajoController extends Controller
         }
 
         return $error;
+    }
+
+    private function _guardarModificacion($id, $descripcion){
+        $error = '';
+        $modificacion = New Modificaciones();
+        $modificacion->id_ordenes_trabajo = $id;
+        $modificacion->descripcion  = $descripcion;
+        $modificacion->fecha_hora   = Fecha::fechaHoraHoy();
+
+        if(!$modificacion->save())
+            $error = ModelUtil::aplanarErrores($modificacion).'jose';
+
+        return $error;
+
     }
     
 }

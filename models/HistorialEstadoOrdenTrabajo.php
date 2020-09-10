@@ -3,9 +3,11 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 use app\models\Estado;
 use app\models\OrdenesTrabajo;
 use app\models\User;
+use app\common\utils\Permiso;
 
 /**
  * This is the model class for table "ordenes_trabajo.historial_estado_orden_trabajo".
@@ -93,12 +95,36 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
         return $this->estado->color();
     }
 
+    /**
+     * condiciones para mostrar un el boton de proximo
+     * debe tener siguiente estado y debe haber tomado la tarea
+     */
     public function showButtonProximo(){
-        return (!is_null($this->estado->getEstadoProximo()));
+        return (!is_null($this->estado->getEstadoProximo()) && $this->ordenesTrabajo->id_usuario_asignado == User::getCurrentUserId());
     }
 
+    /**
+     * condiciones para mostrar un el boton de atras
+     * debe tener estado anterior y debe haber tomado la tarea
+     */
     public function showButtonAnterior(){
-        return (!is_null($this->estado->getEstadoAnterior()));
+        return (!is_null($this->estado->getEstadoAnterior()) && $this->ordenesTrabajo->id_usuario_asignado == User::getCurrentUserId());
+    }
+
+    /**
+     * Muestra el boton asignar
+     * si es usuario operador y no tiene asignada la tarea
+     */
+    public function showButtonAsignarme(){
+        
+        $usuariosResponsables = ArrayHelper::map($this->ordenesTrabajo->usuarioOrdenTrabajo, 'id_usuario', 'id_usuario');
+        $usuarioActual = User::getCurrentUserId();
+        
+        return ( 
+            Permiso::esUsuarioOperador() && 
+            $this->ordenesTrabajo->id_usuario_asignado != $usuarioActual &&
+            in_array($usuarioActual, $usuariosResponsables)
+        );
     }
 
     /**

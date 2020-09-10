@@ -41,7 +41,7 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
      */
     public function search($params)
     {
-        $query = OrdenesTrabajo::find();
+        $query = OrdenesTrabajo::find()->joinWith(['ultimoEstadoOrdenTrabajo', 'usuarioOrdenTrabajo']);
 
         // add conditions that should always apply here
 
@@ -64,12 +64,10 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
             ->andFilterWhere(['=', 'id_inmueble', $this->id_inmueble]);
 
         if(!empty($this->operadores))
-            $query->joinWith(['usuarioOrdenTrabajo'])
-                ->andWhere(['IN', 'usuario_orden_trabajo.id_usuario', $this->operadores]);
+            $query->andWhere(['IN', 'usuario_orden_trabajo.id_usuario', $this->operadores]);
 
         if(!empty($this->estadoActual))
-            $query->joinWith(['ultimoEstadoOrdenTrabajo'])
-                ->andWhere(['=', 'historial_estado_orden_trabajo.id_estado', $this->estadoActual]);
+            $query->andWhere(['=', 'historial_estado_orden_trabajo.id_estado', $this->estadoActual]);
     
         /*-------------------------RANGO DE FECHAS INICIO-----------------*/
         if (!empty($this->fecha_hora_comienzo) && strpos($this->fecha_hora_comienzo, ' - ') !== false) {
@@ -86,9 +84,13 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
          * agrego filtro operador
          */
         if(Permiso::esUsuarioOperador())
-            $query->joinWith(['usuarioOrdenTrabajo'])
-                ->andWhere(['=', 'usuario_orden_trabajo.id_usuario', \Yii::$app->user->getId()]);
-            
+            $query->andWhere(['=', 'usuario_orden_trabajo.id_usuario', \Yii::$app->user->getId()]);
+
+        /**
+         * el estado borrador no lo ve por nadie
+         */
+        $query->andWhere(['!=', 'historial_estado_orden_trabajo.id_estado', Estado::ESTADO_BORRADOR]);
+        
         return $dataProvider;
     }
 }

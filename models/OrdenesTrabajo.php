@@ -88,7 +88,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             'hora_finalizacion' => Yii::t('app', 'Hora de Finalización'),
             'fecha_comienzo' => Yii::t('app', 'Fecha de Comienzo'),
             'hora_comienzo' => Yii::t('app', 'Hora de Comienzo'),
-            'listaOperadores'  => Yii::t('app','Operadores asignados a la tarea'),
+            'listaOperadores'  => Yii::t('app','Operadores responsable a la tarea'),
             'comentario'  => Yii::t('app','Comentario'),
             'estadoActual'  => Yii::t('app','Estado Actual'),
         ];
@@ -140,6 +140,14 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
     public function getInmueble()
     {
         return $this->hasOne(Inmueble::className(), ['id_inmueble' => 'id_inmueble']);
+    }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getAsignado()
+    {
+        return $this->hasOne(User::className(), ['id_usuario' => 'id_usuario_asignado']);
     }
 
     /**
@@ -195,7 +203,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
 
                 $persona = $usuarioOrden->usuario->persona;
                 
-                $this->listaOperadoresTexts[]  = $persona->apellido . ', ' . $persona->nombre .' (' . $persona->organismo->descripcion . ')';
+                $this->listaOperadoresTexts[]  = $persona->apellido . ', ' . $persona->nombre .' (' . $persona->sucursal->descripcion . ')';
             }
         }
     }
@@ -286,10 +294,22 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
         $operadores = $this->usuarioOrdenTrabajo;
 
         foreach($operadores as $operador){
-            $aplanados .= '<span class="badge badge-secondary">'.$operador->usuario->persona->getApellidoNombre().'</span>';
+            $aplanados .= '<span class="badge badge-secondary">'.$operador->usuario->persona->getApellidoNombre().'</span>&nbsp;';
         }
 
         return $aplanados;
+    }
+
+    /**
+     * descripcion por relacion de tipo de trabajo
+     */
+    public function getAsignadoConEstilo(){
+        if($this->id_usuario_asignado)
+            $asignado ='<span class="badge badge-secondary">'.$this->asignado->persona->getApellidoNombre().'</span>';
+        else
+            $asignado = '<span class="badge badge-secondary">Sin Asignar</span>';
+        
+        return $asignado;
     }
 
     /**
