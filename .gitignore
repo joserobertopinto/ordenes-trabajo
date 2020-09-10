@@ -40,3 +40,4 @@ tests/_support/_generated
 
 #uploads folder
 /uploads
+config/db.php
