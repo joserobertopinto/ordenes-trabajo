@@ -12,41 +12,41 @@ $this->title = 'Ordenes de Trabajo';
     <div class="body-content">
 
         <div class="row">
-            <div class="col-lg-5 col-md-5 col-sm-5">
+            <div class="col-lg-4 col-md-4 col-sm-4">
                 <?php Card::begin([
                     'header'=>'header-icon',
                     'type'=>'card-stats',
                     'icon'=>'<i class="material-icons">assignment_late</i>',
                     'color'=>'danger',
-                    'title'=> $asignadasSinComenzar,
-                    'subtitle'=>'Ordenes asignadas con fecha de comienzo',
+                    'title'=> $totalVencidas,
+                    'subtitle'=>'Fecha de comienzo vencida',
                     'footer'=>'<div class="stats">
                             <i class="material-icons text-danger">warning</i>
                             <a href="#">Get More Space...</a>
                           </div>',
                 ]); Card::end(); ?>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-4 col-sm-4">
                 <?php Card::begin([
                     'header'=>'header-icon',
                     'type'=>'card-stats',
                     'icon'=>'<i class="material-icons">store</i>',
                     'color'=>'success',
-                    'title'=>'$34,245',
-                    'subtitle'=>'Revenue',
+                    'title'=> $totalFinalizadas,
+                    'subtitle'=>'Finalizadas',
                     'footer'=>'<div class="stats">
                             <i class="material-icons">date_range</i> Last 24 Hours
                           </div>',
                 ]); Card::end(); ?>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-4 col-sm-4">
                 <?php Card::begin([
                     'header'=>'header-icon',
                     'type'=>'card-stats',
                     'icon'=>'<i class="material-icons">info_outline</i>',
                     'color'=>'danger',
-                    'title'=>'75',
-                    'subtitle'=>'Fixed Issues',
+                    'title'=> $totalFinalizadasParcial,
+                    'subtitle'=>'Finalizadas Parcial',
                     'footer'=>'<div class="stats">
                             <i class="material-icons">local_offer</i> Tracked from Github
                           </div>',
