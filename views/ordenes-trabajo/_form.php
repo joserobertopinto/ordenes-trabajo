@@ -33,15 +33,36 @@ use yii\web\JsExpression;
         <?php $urlSelect3 = \yii\helpers\Url::to(['/ordenes-trabajo/operadores-ajax']);?>
                 
         <?= $form->field($model, 'listaOperadores', [])->widget(kartik\select2\Select2::classname(), [
-                // 'options' => [
-                //     'placeholder' => 'Seleccione Operadores'
-                // ],
+                'options' => [
+                    'placeholder' => ''
+                ],
                 'value' => $model->listaOperadores,
                 'initValueText' => $model->listaOperadoresTexts,
                 'pluginOptions' => [
-                    // 'allowClear' => true,
+                    'closeOnSelect' => true,
+                    'allowClear' => true,
                     'minimumInputLength' => 3,
                     'multiple' => true,
+                    'ajax' => [
+                        'url' => $urlSelect3,
+                        'dataType' => 'json',
+                        'data' => new JsExpression('function(params) { return {q:params.term}; }'),
+                        'delay' => 250 // para que no haga el request inmediatamente mientras tipea y luego los cancele
+                    ]
+                ]
+            ]);
+        ?>
+
+        <?= $form->field($model, 'id_usuario_asignado', [])->widget(kartik\select2\Select2::classname(), [
+                'options' => [
+                    'placeholder' => 'Seleccione un usuario'
+                ],
+                'value' => isset($model->id_usuario_asignado) ? $model->asignado->id_persona : NULL,
+                'initValueText' => isset($model->id_usuario_asignado) ? $model->asignado->persona->getApellidoNombre() : NULL,
+                'pluginOptions' => [
+                    'allowClear' => true,
+                    'minimumInputLength' => 3,
+                    'multiple' => false,
                     'ajax' => [
                         'url' => $urlSelect3,
                         'dataType' => 'json',
@@ -172,6 +193,10 @@ use yii\web\JsExpression;
             #w1-filters, thead{
                 display:none;
             }
+            .select2-selection__clear{
+                position : absolute!important;
+            }
+            /** fix rowpan de gridview actions para bs4 **/
             .select2-selection__clear{
                 position : absolute!important;
             }

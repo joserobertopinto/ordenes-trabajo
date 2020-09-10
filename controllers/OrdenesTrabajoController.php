@@ -137,6 +137,9 @@ class OrdenesTrabajoController extends Controller
             
             $transaccion= yii::$app->db->beginTransaction();
             
+            //usuario asignado es empty reemplazar por null
+            $model->id_usuario_asignado = empty($model->id_usuario_asignado) ? NULL: $model->id_usuario_asignado;
+
             $model->fecha_hora_comienzo = $model->fecha_comienzo.' '. $model->hora_comienzo;
             
             $error = $this->_guardarOperadores($model);
@@ -334,7 +337,7 @@ class OrdenesTrabajoController extends Controller
                 if(in_array(Permiso::ROL_OPERADOR,$roles))
                     $salida[] = [
                         'id' => $usuario->getId(), 
-                        'text' => $persona->apellido . ', ' . $persona->nombre .' (' . $persona->organismo->descripcion . ')'
+                        'text' => $persona->apellido . ', ' . $persona->nombre .' (' . $persona->sucursal->descripcion . ')'
                     ];
             }
 
@@ -371,19 +374,30 @@ class OrdenesTrabajoController extends Controller
         //elimino registros anteriores, entiendo no es necesario guardarlos 
         UsuarioOrdenTrabajo::deleteAll(['id_ordenes_trabajo' => $model->id_ordenes_trabajo]);
         
-        if (!empty($model->listaOperadores)) {
+        if(!empty($model->listaOperadores)){
+            if(isset($model->id_usuario_asignado) && !in_array($model->id_usuario_asignado, $model->listaOperadores))
+                array_push( $model->listaOperadores, $model->id_usuario_asignado);
             
             foreach ($model->listaOperadores as $operador) {
-                $usuarioOrdenTrabajo = new UsuarioOrdenTrabajo();
-                $usuarioOrdenTrabajo->id_ordenes_trabajo = $model->id_ordenes_trabajo;
-                $usuarioOrdenTrabajo->id_usuario = $operador;
-                
-                if (!$usuarioOrdenTrabajo->save())
-                    $error = 'No se pudo guardar los Operadores.'.ModelUtil::aplanarErrores($usuarioOrdenTrabajo);
+                $error = $this->_guardarOperador($model, $operador);            
             }
-        }
+        }elseif(isset($model->id_usuario_asignado))
+            $error = $this->_guardarOperador($model, $model->id_usuario_asignado);
 
         return $error;
+    }
+
+    /**
+     * 
+     */
+    private function _guardarOperador($model, $operador) {
+        $error = '';
+        $usuarioOrdenTrabajo = new UsuarioOrdenTrabajo();
+        $usuarioOrdenTrabajo->id_ordenes_trabajo = $model->id_ordenes_trabajo;
+        $usuarioOrdenTrabajo->id_usuario = $operador;
+        
+        if (!$usuarioOrdenTrabajo->save())
+            $error = 'No se pudo guardar los Operadores.'.ModelUtil::aplanarErrores($usuarioOrdenTrabajo);
     }
 
     private function _guardarModificacion($id, $descripcion){

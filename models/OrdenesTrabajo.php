@@ -59,13 +59,14 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             [['fecha_hora_creacion','id_usuario_crea'], 'required', 'on' =>[self::SCENARIO_CREATE]],
             [['fecha_finalizacion','hora_finalizacion','comentario'], 'required', 'on' =>[self::SCENARIO_FINALIZAR]],
             [['descripcion', 'id_historial_estado_orden_trabajo', 'id_tipo_trabajo', 'id_inmueble'], 'string'],
-            [['estadoActual','fecha_hora_creacion', 'fecha_hora_finalizacion','listaOperadores','comentario'], 'safe'],
+            [['estadoActual','fecha_hora_creacion', 'fecha_hora_finalizacion','listaOperadores','comentario','id_usuario_asignado'], 'safe'],
             [['nro_orden_trabajo'], 'string', 'max' => 50],
             [['nro_orden_trabajo'], 'string', 'max' => 100],
             [['id_ordenes_trabajo'], 'unique'],
             [['id_historial_estado_orden_trabajo'], 'exist', 'skipOnError' => true, 'targetClass' => HistorialEstadoOrdenTrabajo::className(), 'targetAttribute' => ['id_historial_estado_orden_trabajo' => 'id_historial_estado_orden_trabajo']],
             [['id_inmueble'], 'exist', 'skipOnError' => true, 'targetClass' => Inmueble::className(), 'targetAttribute' => ['id_inmueble' => 'id_inmueble']],
             [['id_tipo_trabajo'], 'exist', 'skipOnError' => true, 'targetClass' => TipoTrabajo::className(), 'targetAttribute' => ['id_tipo_trabajo' => 'id_tipo_trabajo']],
+            // [['id_usuario_asignado', ], 'validarOperadorAsignado', 'on'=>self::SCENARIO_UPDATE],
         ];
     }
 
@@ -91,6 +92,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             'listaOperadores'  => Yii::t('app','Operadores responsable a la tarea'),
             'comentario'  => Yii::t('app','Comentario'),
             'estadoActual'  => Yii::t('app','Estado Actual'),
+            'id_usuario_asignado'  => Yii::t('app','Usuario asignado'),
         ];
     }
 
@@ -150,6 +152,15 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id_usuario' => 'id_usuario_asignado']);
     }
 
+    public function validarOperadorAsignado($attribute,$params){
+        if(empty($this->listaOperadores) && !is_null($this->id_usuario_asignado))
+            $this->addError('id_usuario_asignado', 'El usuario asignado a la tarea debe estar cargado como responsable.');
+        
+        if(!is_null($this->id_usuario_asignado) && !empty($this->listaOperadores)){
+            if(!in_array($this->id_usuario_asignado, $this->listaOperadores))
+                $this->addError('id_usuario_asignado', 'El usuario asignado a la tarea debe estar cargado como responsable.');
+        }
+    }
     /**
      * crea nuevo estado y asocia a orden de trabajo
      * Empty($error), si no hay error
