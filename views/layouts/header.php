@@ -33,7 +33,7 @@ use app\common\utils\Permiso;
                     <h7 class="text-overflow m-0"><?= ((Permiso::esUsuarioSupervisor())?'Supervisor':'Operador'); ?></h7>
                   </div>
                   <div tabindex="-1" class="noti-title dropdown-header">
-                    <h8 class="text-overflow m-0" style="text-align:center"><?= (Yii::$app->user->identity->persona->organismo->descripcion); ?></h8>
+                    <h8 class="text-overflow m-0" style="text-align:center"><?= (Yii::$app->user->identity->persona->sucursal->descripcion); ?></h8>
                   </div>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="#" style="padding: 0;">
