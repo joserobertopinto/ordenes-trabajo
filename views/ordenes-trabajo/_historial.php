@@ -7,6 +7,9 @@ use app\common\utils\Permiso;
 use app\models\Estado;
 use yii\widgets\Pjax;
 use app\models\User;
+use kartik\popover\PopoverX;
+use kartik\form\ActiveForm;
+
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Solicitud */
@@ -53,8 +56,31 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 						
 						<?php echo 'Transferido por: <b>' . $item->usuario->persona->getApellidoNombre() . '</b> ';?>
 						<?php echo '<br><span>Comentario<span>: <b>'.$item->observacion.'</b>'; ?>
-						
+												
 						<?php if($item->id_historial_estado_orden_trabajo == $model->ultimoEstadoOrdenTrabajo->id_historial_estado_orden_trabajo){ ?>
+								<?php 
+									PopoverX::begin([
+									'placement' => PopoverX::ALIGN_TOP,
+									'size' => PopoverX::SIZE_LARGE,
+									'toggleButton' => [
+										'label'=>'<i class = "material-icons">edit</i>', 
+										'class'=>'btn btn-sm btn-outline-primary',
+										'style'=>'background-color: transparent;border-radius: 15px;width: 30px;
+										padding: 5px;'
+									],
+									'id' => 'currentPopover',
+									'header' => '<i class="material-icons">edit</i> Editar Comentario',
+									'footer' => Html::button('Aceptar', [
+											'class' => 'btn btn-sm btn-primary guardar-comentario',
+											'idItem' => $item->id_historial_estado_orden_trabajo,
+										])
+									]);
+										// form with an id used for action buttons in footer
+										$form = ActiveForm::begin(['fieldConfig'=>['showLabels'=>false], 'options' => ['id'=>'kv-login-form']]);
+											echo $form->field($item, 'observacion')->textArea(['placeholder'=>'', 'id' => 'comentarioEnviar']);
+										ActiveForm::end();
+									PopoverX::end();
+								?>
 							<?php if($item->showButtonAnterior()){?>
 								<button 
 									type="button" 
@@ -149,6 +175,10 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 		'id_usuario' => User::getCurrentUserId(),
 	]);
 
+	$urlEditarComentario = Url::to([
+		'historial-estado/editar-comentario',
+	]);
+
   	$js = '//open modal pasar estado
 			$(".btn-pasar").on("click", function(){
 				url = "'.$urlPase.'"
@@ -179,6 +209,24 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 					// $(".pasarModalContent").html( json.html );
 					// $("#pasarModal-label").html(json.titulo);
 					// $("#pasarModal").modal("show");
+				});
+			});
+			$(document).ready(function(){
+				//oculto popover al cargar pagina
+				$(".popover-x").css("display", "none");
+			});
+
+			$(".guardar-comentario").on("click", function(){
+				idItem = $(this).attr("idItem");
+				data = { "comentario" : $("#comentarioEnviar").val() };
+				url = "'.$urlEditarComentario.'?id="+idItem;
+
+				$.post( url,data, function( data ) {
+					var json = JSON.parse(data);
+					if(json.ok)
+						location.reload();
+					else
+						alert(json.mensaje);
 				});
 			});
 	  ';

@@ -103,7 +103,7 @@ $this->title = 'Ordenes de Trabajo';
                                             'view' => function ($url, $model) {
                                                 return Html::a( '<i class="material-icons">visibility</i>',
                                                     [Yii::$app->urlManager->createUrl(['view', 'id' => $model->id_ordenes_trabajo])],
-                                                    ['title' => 'ver']
+                                                    ['title' => 'ver datalle']
                                                 );
                                             },
                                         ],
