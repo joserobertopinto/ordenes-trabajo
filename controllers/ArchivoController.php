@@ -28,7 +28,7 @@ class ArchivoController extends Controller
         		'class' => AccessControl::className(),
                     'rules' => [
                         [
-                            'actions' => ['create','descargar'],
+                            'actions' => ['create','descargar', 'delete'],
                             'allow' => true,
                             'roles' => ['@'],
                         ],
@@ -119,13 +119,46 @@ class ArchivoController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete($id, $origen)
     {
-        $this->findModel($id)->delete();
+    	$model = $this->findModel($id);
+        $id_ordenes_trabajo = $model->id_ordenes_trabajo;
+    	$ok = true;
+        $mensaje = '';
+        $nombre = $model->nombre;
 
-        return $this->redirect(['index']);
+        if (Yii::$app->request->isPost){
+        	//-----Transaccion de guardado-------
+        	$transaction =  Yii::$app->db->beginTransaction(); //<-----BEGIN TRABNSACTION
+        	try {
+
+                $model->deleteFileSystem();
+
+                if (!$model->delete()){
+                    $ok = false;
+                    $mensaje = 'No se pudo borrar el Archivo de la Solicitud.<BR>'.VarDumper::dumpAsString($model->getErrorSummary(true), 3,true);
+                }
+            	    
+        	} catch (Exception $e) {
+        	    $ok = false;
+        	    $mensaje = 'No se pudo eliminar el Archivo.<BR>'.VarDumper::dumpAsString($e->getMessage(), 3,true);
+        	}
+        	
+        	if ($ok){
+        	    $transaction->commit();
+        	    Yii::$app->session->addFlash('success', 'Se eliminó el archivo '.$nombre);
+        	}else{
+        	    $transaction->rollBack();
+        	    if (!empty($mensaje))
+                    Yii::$app->session->addFlash('danger', $mensaje);
+        	}
+    	}
+    	
+    	$url = [$origen, 'id' => $id_ordenes_trabajo];
+    	
+   	    return json_encode(['ok' => $ok]);
+    	
     }
 
     /**

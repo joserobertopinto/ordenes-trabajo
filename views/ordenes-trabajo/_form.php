@@ -11,6 +11,7 @@ use yii\helpers\Url;
 use kartik\grid\GridView;
 use yii\bootstrap4\Modal;
 use yii\web\JsExpression;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\OrdenesTrabajo */
@@ -74,10 +75,6 @@ use yii\web\JsExpression;
         ?>
 
         <?= $form->field($model, 'id_tipo_trabajo')->widget(kartik\select2\Select2::classname(), [
-            // 'initValueText' => $model->incumbenciasActualesTexts,
-            // 'value'=> $model->incumbenciasActualesIDs,
-            //'name' => 'Solicitud[tiposAudiencia]',
-            //'id'=>'solicitud-tiposAudiencia', 
             'hideSearch' => true,
             'data' => ArrayHelper::map(TipoTrabajo::find()->orderBy('descripcion DESC')->all(),'id_tipo_trabajo','descripcion'),
             'options' => ['placeholder' => 'Seleccione tipo de trabajo a realizar'],
@@ -88,10 +85,6 @@ use yii\web\JsExpression;
 	    ?>
 
         <?= $form->field($model, 'id_inmueble')->widget(kartik\select2\Select2::classname(), [
-            // 'initValueText' => $model->incumbenciasActualesTexts,
-            // 'value'=> $model->incumbenciasActualesIDs,
-            //'name' => 'Solicitud[tiposAudiencia]',
-            //'id'=>'solicitud-tiposAudiencia',
             'hideSearch' => true,
             'data' => ArrayHelper::map(Inmueble::find()->orderBy('descripcion DESC')->all(),'id_inmueble','descripcion'),
             'options' => ['placeholder' => 'Seleccione el inmueble donde se realizará el trabajo'],
@@ -113,7 +106,7 @@ use yii\web\JsExpression;
         </div>
 
         <br>
-            
+        <?php $origen = 'ordenes-trabajo/update';?>
         <div class="card">
             <div class="card-header card-header-success">
                 <h5 class="card-title">Adjuntar archivos a la orden
@@ -121,23 +114,51 @@ use yii\web\JsExpression;
                 </h5>
             </div>
             <div class="card-body">
+            <?php Pjax::begin(['id' => 'pjax-grilla', 'timeout' => false, 'enablePushState' => false]) ?>
                 <?=
                     GridView::widget([
                         'dataProvider'=> $dataProviderArchivo,
-                        'filterModel' => false,
                         'summary' => '',
                         'striped' => false,
                         'bordered'=>false,
                         'columns' => [
                             [
+                                'attribute' => 'id_archivo',
+                                'visible' => false
+                            ],
+                            [
                                 'attribute' => 'nombre',
                                 'value'     => function($model){return $model->getDescargaHtmlLink();},
                                 'format'    => 'raw'
                             ],
+
+                        [
+                            'class' => 'kartik\grid\ActionColumn',
+                            'template' => '{delete}', // .' {custom}',
+                            'visibleButtons' => [
+                                'update' => function ($model, $key, $index) {
+                                    return $model->puedeModificar();
+                                }
+                            ],
+                        
+                            'buttons' => [
+                                'delete' => function ($url, $model) use ($origen){
+                                    $url = Url::to(['archivo/delete/', 'id'=>$model->id_archivo, 'origen'=>$origen]);
+                                    return Html::button('<i class="material-icons" aria-hidden="true">close</i>', [
+                                            'class' => 'btn-eliminar-archivo',
+                                            'rel' => $url,
+                                            'pregunta' => '¿ Está seguro que desea eliminar el Archivo ?',
+                                            'style' => 'border: 0; background-color: transparent; color:red;',
+                                            'title' => 'Eliminar Archivo',
+                                     ]);
+                                },
+                            ],
                         ],
-                        'pjax'=>true,
+                    ],
+                        // 'pjax'=>true,
                     ]);
                 ?>
+                <?php Pjax::end() ?>
             </div>
         </div>
 
@@ -164,6 +185,26 @@ use yii\web\JsExpression;
     ?>
     <!-- FIN MODAL -->
 
+    <!-- MODAL PARA CONFIRMAR -->
+    <?php
+        yii\bootstrap4\Modal::begin([
+            'title'=>'Confirmar ',
+            'id'=>'confirmarModalArchivo',
+            'class' =>'modal',
+            'size' => yii\bootstrap4\Modal::SIZE_DEFAULT,
+        ]);
+        echo "<div class='confirmaModalArchivoContent'>
+            <div id='modalPregunta'></div>
+            <div class='card-footer'>
+            <button class='btn btn-default' data-dismiss='modal' type='button'>Cancelar</button>
+            <button class='btn btn-primary btn-confirmar-archivo' type='button'>Aceptar</button>
+            </div>
+        </div>";
+        yii\bootstrap4\Modal::end();
+    ?>
+    <!-- FIN MODAL -->
+
+
     <?php
         
         $js = ' $(document).ready(function(){
@@ -182,8 +223,22 @@ use yii\web\JsExpression;
                     });
                 });
                 
+                $(".btn-eliminar-archivo").on("click", function(){
+                    r = $(this).attr("rel");
+                    $(".btn-confirmar-archivo").attr("rel", r);
+                    $("#modalPregunta").html($(this).attr("pregunta"));
+                    $("#confirmarModalArchivo").modal("show");
+                });
+
+                $(".btn-confirmar-archivo").on("click", function(){
+                    url = $(this).attr("rel");
+                    $.post( url, function( data ) {
+                        location.reload();
+                    });
+                });
+
                 $("#archivoModal").on("hidden.bs.modal", function () {
-                    $.pjax.reload({container:"#w1-pjax"});
+                    location.reload();
                 });
             ';
 
