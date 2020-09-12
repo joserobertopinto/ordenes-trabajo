@@ -100,7 +100,12 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
      * debe tener siguiente estado y debe haber tomado la tarea
      */
     public function showButtonProximo(){
-        return (!is_null($this->estado->getEstadoProximo()) && $this->ordenesTrabajo->id_usuario_asignado == User::getCurrentUserId());
+        return ((!is_null($this->estado->getEstadoProximo())) && 
+            (   
+                $this->ordenesTrabajo->id_usuario_asignado == User::getCurrentUserId() ||
+                Permiso::esUsuarioSupervisor()
+            )
+        );
     }
 
     /**
@@ -108,7 +113,13 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
      * debe tener estado anterior y debe haber tomado la tarea
      */
     public function showButtonAnterior(){
-        return (!is_null($this->estado->getEstadoAnterior()) && $this->ordenesTrabajo->id_usuario_asignado == User::getCurrentUserId());
+        return (
+            (!is_null($this->estado->getEstadoAnterior())) && 
+            (
+                $this->ordenesTrabajo->id_usuario_asignado == User::getCurrentUserId() ||
+                Permiso::esUsuarioSupervisor()
+            )
+        );
     }
 
     /**
@@ -122,9 +133,21 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
         
         return ( 
             Permiso::esUsuarioOperador() && 
-            $this->ordenesTrabajo->id_usuario_asignado != $usuarioActual &&
+            !($this->_estoyAsignado()) &&
             in_array($usuarioActual, $usuariosResponsables)
         );
+    }
+
+     /**
+     * 
+     */
+    public function showEditarComentario(){
+        $salida = false;
+        
+        if(  Permiso::esUsuarioSupervisor() || $this->_estoyAsignado() )
+            $salida = true;
+
+        return $salida;
     }
 
     /**
@@ -137,5 +160,12 @@ class HistorialEstadoOrdenTrabajo extends \yii\db\ActiveRecord
             $salida = false;
 
         return $salida;
+    }
+
+    private function _estoyAsignado(){
+        
+        $usuarioActual = User::getCurrentUserId();
+        
+        return $this->ordenesTrabajo->id_usuario_asignado == $usuarioActual;
     }
 }

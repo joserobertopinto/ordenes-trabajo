@@ -59,6 +59,7 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 							echo '<br><span>Comentario<span>: <b>'.$observacion.'</b>'; ?>
 												
 						<?php if($item->id_historial_estado_orden_trabajo == $model->ultimoEstadoOrdenTrabajo->id_historial_estado_orden_trabajo){ ?>
+							<?php if($item->showEditarComentario()){ ?>
 								<?php 
 									PopoverX::begin([
 									'placement' => PopoverX::ALIGN_TOP,
@@ -82,6 +83,7 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 										ActiveForm::end();
 									PopoverX::end();
 								?>
+							<?php } ?>
 							<?php if($item->showButtonAnterior()){?>
 								<button 
 									type="button" 
@@ -199,17 +201,15 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 			$(".btn-confirmar").on("click", function(){
 				url = "'.$urlVolver.'";
 				$.post( url, function( data ) {
-					$("#confirmarModal").modal("hidden");
+					location.reload(); // siempre hago un reload para mostrar la notificacion flash
 				});
 			});
 
 			$(".btn-tomar-tarea").on("click", function(){
 				url = "'.$urlTomarTarea.'"
 				$.post( url, function( data ) {
-					// var json = JSON.parse(data);
-					// $(".pasarModalContent").html( json.html );
-					// $("#pasarModal-label").html(json.titulo);
-					// $("#pasarModal").modal("show");
+					var json = JSON.parse(data);
+					location.reload(); // siempere hago un reload para mostrar la notificacion flash
 				});
 			});
 			$(document).ready(function(){

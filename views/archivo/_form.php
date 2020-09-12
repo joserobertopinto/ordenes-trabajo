@@ -85,6 +85,7 @@ use kartik\alert\Alert;
                 contentType: false,
                 processData: false
             });
+            return false;
         });'
     );
 

@@ -265,6 +265,7 @@ class OrdenesTrabajoController extends Controller
      */
     public function actionVolver($id){
         
+        $ok = true;
         $model = $this->findModel($id);
         $historialCompleto = $model->historialEstadoOrdenTrabajo;
         $ultimoHistorial = $model->ultimoEstadoOrdenTrabajo;
@@ -284,7 +285,10 @@ class OrdenesTrabajoController extends Controller
             Yii::$app->session->addFlash('danger', 'No se pudo realizar el cambio de estado.<br>'.ModelUtil::aplanarErrores($model).'<br>'.ModelUtil::aplanarErrores($ultimoHistorial));
         }
 
-        return $this->redirect(['view', 'id' => $model->id_ordenes_trabajo]);
+        // return $this->redirect(['view', 'id' => $model->id_ordenes_trabajo]);
+        $response['ok'] = $ok;
+        
+        return json_encode($response);
         
     }
 
@@ -292,7 +296,10 @@ class OrdenesTrabajoController extends Controller
      * vuelvo tarea a estado anterior
      */
     public function actionTomarTarea($id, $id_usuario){
-        
+        $ok = true;
+
+        $error = '';
+
         $model = $this->findModel($id);
 
         $transaccion= yii::$app->db->beginTransaction();
@@ -317,7 +324,9 @@ class OrdenesTrabajoController extends Controller
             Yii::$app->session->addFlash('danger', 'No se pudo asignada.<br>'.$error);
         }
 
-        return $this->redirect(['view', 'id' => $id]);
+        $response['ok'] = $ok;
+
+        return json_encode($response);
         
     }
 
