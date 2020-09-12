@@ -5,12 +5,17 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use kartik\alert\Alert;
 use app\models\Estado;
+use app\common\utils\Fecha;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Historial */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
+<?php
+    $dateTime = explode(' ' ,date('Y-m-d H:i'));
+    $fechaActual= $dateTime[0];
+    $horaActual = $dateTime[1];
+?>
 <div class="col-lg-12">
     <?php if (Yii::$app->session->hasFlash('success')): ?>
         <div class="alert alert-success alert-dismissable">
@@ -55,10 +60,10 @@ use app\models\Estado;
 
         <div class="row">
             <div class="col-md-4">
-                <?= $form->field($model, 'fecha_finalizacion')->textInput(['type' => 'date']) ?>
+                <?= $form->field($model, 'fecha_finalizacion')->textInput(['type' => 'date',  'value' => $fechaActual,'max'=> $fechaActual]) ?>
             </div>
             <div class="col-md-4">
-                <?= $form->field($model, 'hora_finalizacion')->textInput(['type' => 'time']) ?>
+                <?= $form->field($model, 'hora_finalizacion')->textInput(['type' => 'time', 'value' => $horaActual]) ?>
             </div>
         </div>
 
@@ -102,6 +107,15 @@ use app\models\Estado;
                 contentType: false,
                 processData: false
             });
-        });'
+        });
+
+        // $("#ordenestrabajo-fecha_finalizacion").on("change", function(){
+        //     // alert ($(this).val());
+        //     var now = new Date(),
+        //     // minimum date the user can choose, in this case now and in the future
+        //     minDate = now.toISOString().substring(0,10);
+
+        //     $("#ordenestrabajo-hora_finalizacion").prop("min", minDate);
+        // });'
     );
 ?>
