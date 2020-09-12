@@ -96,6 +96,12 @@
                 <div class="ripple-container"></div>
               <div class="ripple-container"></div></a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#modificaciones" data-toggle="tab">
+                <i class="material-icons">edit</i> Modificaciones
+                <div class="ripple-container"></div>
+              <div class="ripple-container"></div></a>
+            </li>
           </ul>
         </div>
       </div>
@@ -131,6 +137,11 @@
                 ?>
             </div>
         </div>
+        </div>
+        <div class="tab-pane" id="modificaciones">
+
+        <?= $this->render('_modificaciones', ['dataProviderModificaciones'=> $dataProviderModificaciones]) ?>
+
         </div>
       </div>
     </div><!-- END BODY TAB -->

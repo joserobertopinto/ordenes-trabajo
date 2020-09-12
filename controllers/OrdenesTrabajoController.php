@@ -84,9 +84,14 @@ class OrdenesTrabajoController extends Controller
             'query' => $model->getArchivos(),
         ]);
 
+        $dataProviderModificaciones = new ActiveDataProvider([
+            'query' => $model->getModificaciones(),
+        ]);
+
         return $this->render('view', [
             'model' => $model,
-            'dataProviderArchivo' => $dataProviderArchivo
+            'dataProviderArchivo' => $dataProviderArchivo,
+            'dataProviderModificaciones' => $dataProviderModificaciones
         ]);
     }
 
@@ -108,6 +113,8 @@ class OrdenesTrabajoController extends Controller
         if($model->save()){
             $error = $model->pasarEstado(Estado::ESTADO_BORRADOR);
             if(empty($error)){
+                $this->_guardarModificacion($model->id_ordenes_trabajo,"Orden creada, por ".User::getCurrentUserName());
+                
                 $transaccion->commit();            
                 return $this->redirect(['update','id' => $model->id_ordenes_trabajo]);
             }
@@ -209,7 +216,7 @@ class OrdenesTrabajoController extends Controller
         if(isset($id))
             $model = $this->findModel($id);
         else
-            $model = $this->findModel(Yii::$app->request->post('OrdenesTrabajo')["id_ordenes_trabajo"]);;
+            $model = $this->findModel(Yii::$app->request->post('OrdenesTrabajo')["id_ordenes_trabajo"]);
         
         if($id_estado == Estado::ESTADO_FINALIZADO)
             $model->scenario = OrdenesTrabajo::SCENARIO_FINALIZAR;
@@ -224,9 +231,12 @@ class OrdenesTrabajoController extends Controller
                 $error  = ($model->pasarEstado($historial->id_estado));
                 
                 if(empty($error)){
+
+                    $this->_guardarModificacion($model->id_ordenes_trabajo,'Se pasa la orden a estado : '.$model->ultimoEstadoOrdenTrabajo->estado->descripcion.', por el usuario '.Yii::$app->user->identity->username);
+
                     $transaccion->commit();
 
-                    Yii::$app->session->addFlash('success', 'Se ha cambiado el estado de la orden con éxito.');
+                    Yii::$app->session->addFlash('success', 'Estado de la orden actualizado');
                     
                     return $this->redirect(['view', 'id' => $model->id_ordenes_trabajo]);
                 }
@@ -265,12 +275,13 @@ class OrdenesTrabajoController extends Controller
         $model->id_historial_estado_orden_trabajo = $anteUltimoHistorial;
         
         if($model->save() && $ultimoHistorial->delete()){
+            $this->_guardarModificacion($id,'Se vuelve la orden a estado: '.$model->ultimoEstadoOrdenTrabajo->estado->descripcion.', por el usuario '.Yii::$app->user->identity->username);
             $transaccion->commit();
-            Yii::$app->session->addFlash('success', 'Pase realizado con éxito.');
+            Yii::$app->session->addFlash('success', 'Estado de la orden actualizado.');
 
         }else{
             $transaccion->rollBack();
-            Yii::$app->session->addFlash('danger', 'No se pudo realizar el cambio de estado.<br>'.ModeloUtil::aplanarErrores($model).'<br>'.ModelUtil::aplanarErrores($ultimoHistorial));
+            Yii::$app->session->addFlash('danger', 'No se pudo realizar el cambio de estado.<br>'.ModelUtil::aplanarErrores($model).'<br>'.ModelUtil::aplanarErrores($ultimoHistorial));
         }
 
         return $this->redirect(['view', 'id' => $model->id_ordenes_trabajo]);
@@ -400,7 +411,13 @@ class OrdenesTrabajoController extends Controller
             $error = 'No se pudo guardar los Operadores.'.ModelUtil::aplanarErrores($usuarioOrdenTrabajo);
     }
 
+    /**
+     * guarda moficicaciones en la orden
+     * @param $id id_orden_trabajo
+     * @param $descripcion
+     */
     private function _guardarModificacion($id, $descripcion){
+
         $error = '';
         $modificacion = New Modificaciones();
         $modificacion->id_ordenes_trabajo = $id;
@@ -408,7 +425,7 @@ class OrdenesTrabajoController extends Controller
         $modificacion->fecha_hora   = Fecha::fechaHoraHoy();
 
         if(!$modificacion->save())
-            $error = ModelUtil::aplanarErrores($modificacion).'jose';
+            $error = ModelUtil::aplanarErrores($modificacion);
 
         return $error;
 

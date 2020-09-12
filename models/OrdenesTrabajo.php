@@ -11,6 +11,7 @@ use app\models\OrdenAnioNro;
 use app\models\UsuarioOrdenTrabajo;
 use app\models\TipoTrabajo;
 use app\models\Inmueble;
+use app\models\Modificaciones;
 
 /**
  * This is the model class for table "ordenes_trabajo.ordenes_trabajo".
@@ -102,6 +103,14 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
     public function getArchivos()
     {
         return $this->hasMany(Archivo::className(), ['id_ordenes_trabajo' => 'id_ordenes_trabajo']);
+    }
+
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+    public function getModificaciones()
+    {
+        return $this->hasMany(Modificaciones::className(), ['id_ordenes_trabajo' => 'id_ordenes_trabajo'])->orderBy(['fecha_hora'=>SORT_DESC]);;
     }
     
     /**

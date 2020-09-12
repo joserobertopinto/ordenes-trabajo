@@ -55,7 +55,8 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 					<div class="timeline-body">
 						
 						<?php echo 'Transferido por: <b>' . $item->usuario->persona->getApellidoNombre() . '</b> ';?>
-						<?php echo '<br><span>Comentario<span>: <b>'.$item->observacion.'</b>'; ?>
+						<?php $observacion = (!empty($item->observacion)) ? $item->observacion :'<span class="text-danger">sin completar</span>';
+							echo '<br><span>Comentario<span>: <b>'.$observacion.'</b>'; ?>
 												
 						<?php if($item->id_historial_estado_orden_trabajo == $model->ultimoEstadoOrdenTrabajo->id_historial_estado_orden_trabajo){ ?>
 								<?php 
@@ -86,7 +87,7 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 									type="button" 
 									title='Volver a <?= $item->estado->getEstadoLabel($item->estado->getEstadoAnterior()); ?>'
 									rel = ""
-									pregunta = "Desea volver la tarea al estado anterior?"
+									pregunta = "<p>Al volver la orden al estado anterior perderá los comentarios agregados al estado actual.<p>Desea volver la tarea al estado anterior?"
 									class = "btn-volver-estado"
 									style="float: right; border: 0px;background: transparent;color:#9d36b3">
 									<i class="fa fa-arrow-down"></i>
@@ -191,7 +192,7 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 			});
 			
 			$(".btn-volver-estado").on("click", function(){
-				$("#modalPregunta").html($(this).attr("pregunta") );
+				$("#modalPregunta").html("<b>"+$(this).attr("pregunta")+"</b>" );
 				$("#confirmarModal").modal("show");
 			});
 
@@ -240,8 +241,9 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 		  }
 		  #modalPregunta{
 			text-align: center;
-			margin:40px;
-			font-size: 16px;
+			margin-bottom:40px;
+			margin-top:0px;
+			font-size: 15px;
 		  }
 		  
   ';
