@@ -47,6 +47,9 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [ 
+                'defaultOrder'=>['fecha_hora_creacion'=>SORT_DESC],
+            ],
         ]);
 
         $this->load($params);

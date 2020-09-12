@@ -4,10 +4,6 @@ use \DateTime;
 
 class Fecha {
 	
-	const FORMATO_API_DATE = 'Ymd';
-	const FORMATO_API_DATE_TIME = 'YmdHis';
-	const FORMATO_API_DATE_TIME_SIN_SEGUNDOS = 'YmdHi';
-	
 	public static function stringToDateTime($stringDate, $format = "d/m/Y") {
 		$d = DateTime::createFromFormat($format, $stringDate);
 		

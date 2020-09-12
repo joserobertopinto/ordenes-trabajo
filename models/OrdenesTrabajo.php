@@ -68,6 +68,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
             [['id_inmueble'], 'exist', 'skipOnError' => true, 'targetClass' => Inmueble::className(), 'targetAttribute' => ['id_inmueble' => 'id_inmueble']],
             [['id_tipo_trabajo'], 'exist', 'skipOnError' => true, 'targetClass' => TipoTrabajo::className(), 'targetAttribute' => ['id_tipo_trabajo' => 'id_tipo_trabajo']],
             // [['id_usuario_asignado', ], 'validarOperadorAsignado', 'on'=>self::SCENARIO_UPDATE],
+            // [['hora_finalizacion', ], 'validarFechaFinalizacion'],
         ];
     }
 
@@ -170,6 +171,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
                 $this->addError('id_usuario_asignado', 'El usuario asignado a la tarea debe estar cargado como responsable.');
         }
     }
+  
     /**
      * crea nuevo estado y asocia a orden de trabajo
      * Empty($error), si no hay error
