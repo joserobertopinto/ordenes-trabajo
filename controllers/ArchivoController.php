@@ -145,14 +145,11 @@ class ArchivoController extends Controller
         	    $mensaje = 'No se pudo eliminar el Archivo.<BR>'.VarDumper::dumpAsString($e->getMessage(), 3,true);
         	}
         	
-        	if ($ok){
+        	if ($ok)
         	    $transaction->commit();
-        	    Yii::$app->session->addFlash('success', 'Se eliminó el archivo '.$nombre);
-        	}else{
+        	else
         	    $transaction->rollBack();
-        	    if (!empty($mensaje))
-                    Yii::$app->session->addFlash('danger', $mensaje);
-        	}
+        	
     	}
     	
     	$url = [$origen, 'id' => $id_ordenes_trabajo];

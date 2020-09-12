@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
+use yii\web\View;
 use app\models\Inmueble;
 use app\models\TipoTrabajo;
 use dosamigos\fileupload\FileUpload;
@@ -114,7 +115,6 @@ use yii\widgets\Pjax;
                 </h5>
             </div>
             <div class="card-body">
-            <?php Pjax::begin(['id' => 'pjax-grilla', 'timeout' => false, 'enablePushState' => false]) ?>
                 <?=
                     GridView::widget([
                         'dataProvider'=> $dataProviderArchivo,
@@ -146,6 +146,7 @@ use yii\widgets\Pjax;
                                     $url = Url::to(['archivo/delete/', 'id'=>$model->id_archivo, 'origen'=>$origen]);
                                     return Html::button('<i class="material-icons" aria-hidden="true">close</i>', [
                                             'class' => 'btn-eliminar-archivo',
+                                            'onclick' => 'eliminarArchivo(this)',
                                             'rel' => $url,
                                             'pregunta' => '¿ Está seguro que desea eliminar el Archivo ?',
                                             'style' => 'border: 0; background-color: transparent; color:red;',
@@ -155,10 +156,9 @@ use yii\widgets\Pjax;
                             ],
                         ],
                     ],
-                        // 'pjax'=>true,
+                        'pjax'=>true,
                     ]);
                 ?>
-                <?php Pjax::end() ?>
             </div>
         </div>
 
@@ -222,27 +222,35 @@ use yii\widgets\Pjax;
                         $("#archivoModal").modal("show");
                     });
                 });
+
+                $(".btn-confirmar-archivo").on("click", function(){
+                    url = $(this).attr("rel");
+                    $.post( url, function( data ) {
+                        $("#confirmarModalArchivo").modal("hide");
+                        $.pjax.reload({container:"#w1-pjax"});
+                    });
+                });
                 
-                $(".btn-eliminar-archivo").on("click", function(){
+
+                $("#archivoModal").on("hidden.bs.modal", function () {
+                    $.pjax.reload({container:"#w1-pjax", timeout: false});
+                });
+            ';
+
+        $this->registerJS($js);
+        
+        //registro pos_end para no perder el binding
+        $script = '                    
+        function eliminarArchivo(){
+            $(".btn-eliminar-archivo").on("click", function(){
                     r = $(this).attr("rel");
                     $(".btn-confirmar-archivo").attr("rel", r);
                     $("#modalPregunta").html($(this).attr("pregunta"));
                     $("#confirmarModalArchivo").modal("show");
                 });
-
-                $(".btn-confirmar-archivo").on("click", function(){
-                    url = $(this).attr("rel");
-                    $.post( url, function( data ) {
-                        location.reload();
-                    });
-                });
-
-                $("#archivoModal").on("hidden.bs.modal", function () {
-                    location.reload();
-                });
-            ';
-
-        $this->registerJS($js);
+        }';    
+        
+        $this->registerJs($script, View::POS_END); 
 
         $css = '
             #w1-filters, thead{
