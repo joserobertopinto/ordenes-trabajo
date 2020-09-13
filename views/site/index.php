@@ -19,7 +19,7 @@ $this->title = 'Ordenes de Trabajo';
                 <div class="card">
                     <div class="card-header card-header-info">
                         <h4 class="card-title">
-                        <i class="material-icons" aria-hidden="true">access_time</i>&nbsp;Tareas por hacer</h4>
+                        <i class="material-icons" aria-hidden="true">access_time</i>&nbsp;Tareas por hacer <?= empty($searchModelHistorial->fecha_hora_comienzo)?'esta semana':$searchModelHistorial->fecha_hora_comienzo?></h4>
                         <p class="card-category">								
                         </p>
                     </div>
@@ -36,13 +36,10 @@ $this->title = 'Ordenes de Trabajo';
                         'header'=>'header-icon',
                         'type'=>'card-stats',
                         'icon'=>'<i class="material-icons">assignment_late</i>',
-                        'color'=>'danger',
-                        'title'=> $totalVencidas,
-                        'subtitle'=>'Fecha de comienzo vencida',
-                        'footer'=>'<div class="stats">
-                                <i class="material-icons text-danger">warning</i>
-                                <a href="#">Get More Space...</a>
-                            </div>',
+                        'color'=>'warning',
+                        'title'=> $totalPendientes,
+                        'subtitle'=>'Pendientes',
+                        'footer'=>'<div class="stats"><i class="material-icons">date_range</i>Total de tareas Pendientes</div>',
                     ]); Card::end(); ?>
                 </div>
             
@@ -54,73 +51,10 @@ $this->title = 'Ordenes de Trabajo';
                         'color'=>'success',
                         'title'=> $totalFinalizadas,
                         'subtitle'=>'Finalizadas',
-                        'footer'=>'<div class="stats">
-                                <i class="material-icons">date_range</i> Last 24 Hours
-                            </div>',
+                        'footer'=>'<div class="stats"><i class="material-icons">date_range</i>Total de tareas finalizadas</div>',
                     ]); Card::end(); ?>
                 </div>
             </div>
-
-            <div class="col-lg-12 col-md-12">
-                <div class="card">
-                    <div class="card-header card-header-warning">
-                        <h4 class="card-title">
-                        <i class="fa fa-exclamation-circle" aria-hidden="true"></i>&nbsp;Tareas pendientes asignadas Recientemente</h4>
-                        <p class="card-category"></p>
-                    </div>
-                    <div class="card-body table-responsive">
-                        <!-- GRILLA KARTIK -->
-                        <?=
-                            GridView::widget([
-                                'dataProvider'=> $dataProviderAsignadas,
-                                'filterModel' => false,
-                                'summary' => '',
-                                'striped' => false,
-                                'bordered'=>false,
-                                'options' => [
-                                    'class' => 'gridClassWarning',
-                                 ],
-                                'columns' => [
-                                    [
-                                        'attribute' => 'id_ordenes_trabajo',
-                                        'visible'   => false,
-                                    ],
-                                    [
-                                        'attribute' => 'nro_orden_trabajo',
-                                        'label'     => 'Nro.',
-                                        'visible'   => true,
-                                        'headerOptions' => ['style' => 'width:10%'],
-                                    ],
-                                    'titulo',
-                                    [
-                                        'attribute' => 'fecha_hora_comienzo',
-                                        'label'		=> 'Comienzo',
-                                        'value'		=> function ($model) {
-                                                return Fecha::convertir($model->fecha_hora_comienzo);
-                                            },
-                                        'filter' => false,
-                                    ],
-                                    [
-                                        'class' => 'kartik\grid\ActionColumn',
-                                        'headerOptions' => ['id' => 'headerGrilla'],
-                                        'dropdown' => false,
-                                        'template' => '{view}', // .' {custom}',
-                                        'buttons' => [
-                                            'view' => function ($url, $model) {
-                                                return Html::a( '<i class="material-icons">visibility</i>',
-                                                    [Yii::$app->urlManager->createUrl(['view', 'id' => $model->id_ordenes_trabajo])],
-                                                    ['title' => 'ver datalle']
-                                                );
-                                            },
-                                        ],
-                                    ],
-                                ],
-                                'pjax'=>false,
-                            ]);
-                        ?>
-                    </div>
-                </div>
-            </div><!-- END CARD ASIGNADAS RECIENTEMENTE -->
 
             <div class="col-lg-12 col-md-12">
                 <div class="card">
