@@ -76,7 +76,6 @@ class SiteController extends Controller
         /**
          * timeline
          */
-        // var_dump(Yii::$app->request->bodyParams);exit;
         $searchModelHistorial = new OrdenesTrabajoSearch();
         $dataProviderHistorial = $searchModelHistorial->timeSearch(Yii::$app->request->bodyParams);
 
@@ -87,62 +86,50 @@ class SiteController extends Controller
         if(Permiso::esUsuarioOperador())
             $queryUsuario = User::getCurrentUserId();
 
-        /************************************************************************************* */
-        $queryAsignadas =  OrdenesTrabajo::find()
-            ->joinWith(['ultimoEstadoOrdenTrabajo', 'usuarioOrdenTrabajo'])
-            ->andWhere(['=', 'historial_estado_orden_trabajo.id_estado', Estado::ESTADO_PENDIENTE])
-            ->andFilterWhere(['=', 'usuario_orden_trabajo.id_usuario', $queryUsuario])
-            ->orderBy('fecha_hora_comienzo DESC')
-            ->limit(10);
+        /****************************************grilla********************************************* */
+        if(!empty($queryUsuario)){
+            $queryFinalizadas =  OrdenesTrabajo::find()
+                ->joinWith(['ultimoEstadoOrdenTrabajo', 'usuarioOrdenTrabajo'])
+                ->andWhere(['IN', 'historial_estado_orden_trabajo.id_estado', [Estado::ESTADO_FINALIZADO, Estado::ESTADO_FINALIZADO_PARCIAL]])
+                ->andFilterWhere(['=', 'usuario_orden_trabajo.id_usuario', $queryUsuario])
+                ->orderBy('fecha_hora_comienzo DESC')
+                ->limit(10);
 
-        $dataProviderAsignadas = new ActiveDataProvider([
-            'query' => $queryAsignadas
-        ]);
+            $totalPendientes=  OrdenesTrabajo::find()
+                ->joinWith(['ultimoEstadoOrdenTrabajo', 'usuarioOrdenTrabajo'])
+                ->andWhere(['=', 'historial_estado_orden_trabajo.id_estado', Estado::ESTADO_PENDIENTE])
+                ->andFilterWhere(['=', 'usuario_orden_trabajo.id_usuario', $queryUsuario])
+                ->count();
+        }else{
+            $queryFinalizadas =  OrdenesTrabajo::find()
+                ->joinWith(['ultimoEstadoOrdenTrabajo'])
+                ->andWhere(['IN', 'historial_estado_orden_trabajo.id_estado', [Estado::ESTADO_FINALIZADO, Estado::ESTADO_FINALIZADO_PARCIAL]])
+                ->orderBy('fecha_hora_comienzo DESC')
+                ->limit(10);
 
-        /************************************************************************************* */
-        $queryFinalizadas =  OrdenesTrabajo::find()
-            ->joinWith(['ultimoEstadoOrdenTrabajo', 'usuarioOrdenTrabajo'])
-            ->andWhere(['=', 'historial_estado_orden_trabajo.id_estado', Estado::ESTADO_FINALIZADO])
-            ->andFilterWhere(['=', 'usuario_orden_trabajo.id_usuario', $queryUsuario])
-            ->orderBy('fecha_hora_comienzo DESC')
-            ->limit(10);
-                
+            $totalPendientes=  OrdenesTrabajo::find()
+                ->joinWith(['ultimoEstadoOrdenTrabajo'])
+                ->andWhere(['=', 'historial_estado_orden_trabajo.id_estado', Estado::ESTADO_PENDIENTE])
+                ->count();
+        }
+
         $dataProviderFinalizadas = new ActiveDataProvider([
             'query' =>  $queryFinalizadas
         ]);
 
-        /************************************************************************************ */
+        /*************************************funciona CARD**************************************** */
         // tareas asignadas con fecha de comienzo menor al actual
-        $totalFinalizadas=  OrdenesTrabajo::find()
-            ->joinWith(['ultimoEstadoOrdenTrabajo', 'usuarioOrdenTrabajo'])
-            ->andWhere(['=', 'historial_estado_orden_trabajo.id_estado', Estado::ESTADO_PENDIENTE])
-            ->andFilterWhere(['=', 'usuario_orden_trabajo.id_usuario', $queryUsuario])
-            ->count();
+        $totalFinalizadas=  $dataProviderFinalizadas->getTotalCount();
 
-        /************************************************************************************ */
-        // tareas asignadas con fecha de comienzo menor al actual
-        $totalVencidas=  OrdenesTrabajo::find()
-        ->joinWith(['ultimoEstadoOrdenTrabajo', 'usuarioOrdenTrabajo'])
-        ->andWhere(['=', 'historial_estado_orden_trabajo.id_estado', Estado::ESTADO_PENDIENTE])
-        ->andFilterWhere(['=', 'usuario_orden_trabajo.id_usuario', $queryUsuario])
-        ->count();
-
-        /************************************************************************************ */
+        /***********************************funciona CARD************************************************* */
         // tareas asignadas con fecha de comienzo menor al actual
 
-        $totalFinalizadasParcial =  OrdenesTrabajo::find()
-            ->joinWith(['ultimoEstadoOrdenTrabajo', 'usuarioOrdenTrabajo'])
-            ->andWhere(['=', 'historial_estado_orden_trabajo.id_estado', Estado::ESTADO_PENDIENTE])
-            ->andFilterWhere(['=', 'usuario_orden_trabajo.id_usuario', $queryUsuario])
-            ->count();
 
         /************************************************************************************ */
 
         return $this->render('index',[
             'totalFinalizadas'          => $totalFinalizadas, 
-            'totalVencidas'             => $totalVencidas,
-            'totalFinalizadasParcial'   => $totalFinalizadasParcial,
-            'dataProviderAsignadas'     => $dataProviderAsignadas,
+            'totalPendientes'           => $totalPendientes,
             'dataProviderFinalizadas'   => $dataProviderFinalizadas,
             'searchModelHistorial'      => $searchModelHistorial,
             'dataProviderHistorial'     => $dataProviderHistorial
