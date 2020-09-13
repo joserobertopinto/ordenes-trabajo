@@ -360,6 +360,13 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
 
         return $salida;
 
+    }
+
+     /**
+     * puede editar orden creada
+     */
+    public function color(){
+        return 'label label-default';
      }
     
 }

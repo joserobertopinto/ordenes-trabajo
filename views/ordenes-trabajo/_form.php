@@ -17,6 +17,10 @@ use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $model app\models\OrdenesTrabajo */
 /* @var $form yii\widgets\ActiveForm */
+$fecha_actual = date('Y-m-d');
+$fecha_min = date("Y-m-d",strtotime($fecha_actual."- 1 week"));
+$fecha_max = date("Y-m-d",strtotime($fecha_actual."+ 1 year")); 
+
 ?>
     <div class="form">
         <?php $form = ActiveForm::begin([
@@ -99,7 +103,7 @@ use yii\widgets\Pjax;
 
         <div class="row">
             <div class="col-md-4">
-                <?= $form->field($model, 'fecha_comienzo')->textInput(['type' => 'date']) ?>
+                <?= $form->field($model, 'fecha_comienzo')->textInput(['type' => 'date', 'max' => $fecha_max, 'min' => $fecha_min, 'value' => $fecha_actual]) ?>
             </div>
             <div class="col-md-4">
                 <?= $form->field($model, 'hora_comienzo')->textInput(['type' => 'time']) ?>

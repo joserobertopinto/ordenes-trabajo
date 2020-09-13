@@ -215,7 +215,7 @@ a.desc:after {
     font-weight:600;
     padding:5px;
     display:inline-block;
-    background-color:#fff;
+    /* background-color:#fff; */
     border-radius:4px
 }
 .timeline-inverse>li>.timeline-item {
@@ -254,4 +254,13 @@ a.desc:after {
 }
 .timeline-body .fa {
     font-size: 22px;
+}
+
+.card-category{
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.badge {
+    padding: 0.5em 0.5em!important;
 }

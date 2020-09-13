@@ -58,20 +58,20 @@ class Estado extends \yii\db\ActiveRecord
     public function color() {
        
         if ($this->id_estado == self::ESTADO_BORRADOR){
-            $color = 'bg-blue';
+            $color = 'alert alert-warning';
 //             $classAndIcon["icon"] = "fa fa-balance-scale " . $classAndIcon['color'];
         }
         elseif ($this->id_estado == self::ESTADO_PENDIENTE){
-            $color = 'bg-purple';
+            $color = 'alert alert-info';
 //             $classAndIcon["icon"] = "fa fa-check-square-o " . $classAndIcon['color'];
         }elseif ($this->id_estado == self::ESTADO_EN_PROGRESO){
-            $color = 'bg-aqua';
+            $color = 'alert alert-primary';
 //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
         }elseif ($this->id_estado == self::ESTADO_FINALIZADO){
-            $color = 'bg-red';
+            $color = 'alert alert-success';
 //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
         }elseif ($this->id_estado == self::ESTADO_FINALIZADO_PARCIAL){
-            $color = 'bg-red';
+            $color = 'alert alert-success';
     //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
         }
         

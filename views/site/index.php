@@ -4,63 +4,69 @@ use rce\material\widgets\Card;
 use kartik\grid\GridView;
 use app\common\utils\Fecha;
 use yii\helpers\Html;
+use kartik\popover\PopoverX;
+use kartik\form\ActiveForm;
 /* @var $this yii\web\View */
 
 $this->title = 'Ordenes de Trabajo';
 ?>
 <div class="site-index">
     <div class="body-content">
-
+        <!-- collapse -->
         <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-4">
-                <?php Card::begin([
-                    'header'=>'header-icon',
-                    'type'=>'card-stats',
-                    'icon'=>'<i class="material-icons">assignment_late</i>',
-                    'color'=>'danger',
-                    'title'=> $totalVencidas,
-                    'subtitle'=>'Fecha de comienzo vencida',
-                    'footer'=>'<div class="stats">
-                            <i class="material-icons text-danger">warning</i>
-                            <a href="#">Get More Space...</a>
-                          </div>',
-                ]); Card::end(); ?>
+            
+            <div class = "col-lg-6 col-md-4 col-sm-12">
+                <div class="card">
+                    <div class="card-header card-header-info">
+                        <h4 class="card-title">
+                        <i class="material-icons" aria-hidden="true">access_time</i>&nbsp;Tareas por hacer</h4>
+                        <p class="card-category">								
+                        </p>
+                    </div>
+                    <div class="card card-body">
+                    <?= $this->render('_timeline', ['dataProviderHistorial'=> $dataProviderHistorial, 'searchModelHistorial' => $searchModelHistorial]) ?>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-4">
-                <?php Card::begin([
-                    'header'=>'header-icon',
-                    'type'=>'card-stats',
-                    'icon'=>'<i class="material-icons">store</i>',
-                    'color'=>'success',
-                    'title'=> $totalFinalizadas,
-                    'subtitle'=>'Finalizadas',
-                    'footer'=>'<div class="stats">
-                            <i class="material-icons">date_range</i> Last 24 Hours
-                          </div>',
-                ]); Card::end(); ?>
+            
+            <div class = "col-lg-6 col-md-4 col-sm-12">
+            <div class="row">
+                <div class="col-lg-6 col-md-4 col-sm-6">
+                    <?php Card::begin([
+                        'header'=>'header-icon',
+                        'type'=>'card-stats',
+                        'icon'=>'<i class="material-icons">assignment_late</i>',
+                        'color'=>'danger',
+                        'title'=> $totalVencidas,
+                        'subtitle'=>'Fecha de comienzo vencida',
+                        'footer'=>'<div class="stats">
+                                <i class="material-icons text-danger">warning</i>
+                                <a href="#">Get More Space...</a>
+                            </div>',
+                    ]); Card::end(); ?>
+                </div>
+            
+                <div class="col-lg-6 col-md-4 col-sm-6">
+                    <?php Card::begin([
+                        'header'=>'header-icon',
+                        'type'=>'card-stats',
+                        'icon'=>'<i class="material-icons">done_all</i>',
+                        'color'=>'success',
+                        'title'=> $totalFinalizadas,
+                        'subtitle'=>'Finalizadas',
+                        'footer'=>'<div class="stats">
+                                <i class="material-icons">date_range</i> Last 24 Hours
+                            </div>',
+                    ]); Card::end(); ?>
+                </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-4">
-                <?php Card::begin([
-                    'header'=>'header-icon',
-                    'type'=>'card-stats',
-                    'icon'=>'<i class="material-icons">info_outline</i>',
-                    'color'=>'danger',
-                    'title'=> $totalFinalizadasParcial,
-                    'subtitle'=>'Finalizadas Parcial',
-                    'footer'=>'<div class="stats">
-                            <i class="material-icons">local_offer</i> Tracked from Github
-                          </div>',
-                ]); Card::end(); ?>
-            </div>
-        </div> <!--END ROW -->
 
-        <div class="row">
-            <div class="col-lg-6 col-md-12">
+            <div class="col-lg-12 col-md-12">
                 <div class="card">
                     <div class="card-header card-header-warning">
                         <h4 class="card-title">
                         <i class="fa fa-exclamation-circle" aria-hidden="true"></i>&nbsp;Tareas pendientes asignadas Recientemente</h4>
-                        <p class="card-category">New employees on 15th September, 2016</p>
+                        <p class="card-category"></p>
                     </div>
                     <div class="card-body table-responsive">
                         <!-- GRILLA KARTIK -->
@@ -116,13 +122,13 @@ $this->title = 'Ordenes de Trabajo';
                 </div>
             </div><!-- END CARD ASIGNADAS RECIENTEMENTE -->
 
-            <div class="col-lg-6 col-md-12">
+            <div class="col-lg-12 col-md-12">
                 <div class="card">
                     <div class="card-header card-header-success">
                         <h4 class="card-title">
                         <i class="fa fa-check-square-o"></i>&nbsp;Tareas finalizadas Recientemente
                         </h4>
-                        <p class="card-category">New employees on 15th September, 2016</p>
+                        <p class="card-category"></p>
                     </div>
                     <div class="card-body table-responsive">
                         <!-- GRILLA KARTIK -->
@@ -177,7 +183,8 @@ $this->title = 'Ordenes de Trabajo';
                     </div>
                 </div>
             </div><!-- END CARD FINALIZADAS RECIENTEMENTE -->
-        </div> <!-- END ROW CARD GRILLAS-->
+            </div> <!--  -->
+         </div> <!-- END ROW CARD GRILLAS-->
 
     </div><!-- END BODY CONTENT -->
 

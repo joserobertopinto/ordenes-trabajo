@@ -96,4 +96,62 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
         
         return $dataProvider;
     }
+
+        /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
+    public function timeSearch($params)
+    {
+        $query = OrdenesTrabajo::find()
+            ->joinWith(['ultimoEstadoOrdenTrabajo', 'usuarioOrdenTrabajo'])
+            ->andWhere(['IN', 'historial_estado_orden_trabajo.id_estado', [Estado::ESTADO_PENDIENTE, Estado::ESTADO_EN_PROGRESO]]);
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'sort' => [ 
+                'defaultOrder'=>['fecha_hora_comienzo'=>SORT_DESC],
+            ],
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // si hay operadores que 
+        if(!empty($this->operadores))
+            $query->andWhere(['IN', 'usuario_orden_trabajo.id_usuario', $this->operadores]);
+
+        /*-------------------------RANGO DE FECHAS INICIO-----------------*/
+        if (!empty($this->fecha_hora_comienzo) && strpos($this->fecha_hora_comienzo, ' - ') !== false) {
+            list($start_date, $end_date) = explode(' - ', $this->fecha_hora_comienzo);
+            $start_date = Fecha::convertir($start_date);
+            $end_date   = Fecha::convertir($end_date);
+
+            $query->andFilterWhere(['between', 'fecha_hora_comienzo', $start_date, $end_date.' 23:59:59']);
+        }else{
+            $rangoDefault = Fecha::rangoActualLunesDomingo();
+            $query->andFilterWhere(['between', 'fecha_hora_comienzo', $rangoDefault[0], $rangoDefault[1].' 23:59:59']);
+        }
+        /*------------------------------------------------------------------*/
+
+        /**
+         * agrego filtro operador
+         */
+        if(Permiso::esUsuarioOperador())
+            $query->andWhere(['=', 'usuario_orden_trabajo.id_usuario', \Yii::$app->user->getId()]);
+
+        $query->limit(20);
+
+        return $dataProvider;
+    }
 }

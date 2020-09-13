@@ -123,5 +123,20 @@ class Fecha {
 		}
 
 		return $newDate;
-	}	
+	}
+
+	/**
+	 * devuelve segun la fecha actual el rango de Lunes a Domingo en fechas
+	 */
+	public static function rangoActualLunesDomingo(){
+		$monday = strtotime("last monday");
+		$monday = date('w', $monday)==date('w') ? $monday+7*86400 : $monday;
+		$sunday = strtotime(date("Y-m-d",$monday)." +6 days");
+
+		$rango[0] = date("Y-m-d",$monday);
+		$rango[1] = date("Y-m-d",$sunday);
+
+		return $rango;
+
+	}
 }

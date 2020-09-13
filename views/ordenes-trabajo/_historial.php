@@ -48,14 +48,14 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 			<!-- FIN FECHA (timeline-label) -->
 			<!-- Estado -->
 			<li>
-				<i class="fa fa-check-square-o <?= $item->color() ?>" aria-hidden="true"></i>
+				<i class="fa fa-check-square-o" aria-hidden="true"></i>
 				<div class="timeline-item">
 					<span class="time"><i class="fa fa-clock-o"> <?=date_format($fecha, "H:i:s")?></i></span>
 					<h3 class="timeline-header"><?= $item->estado->descripcion; ?></h3>
 					<div class="timeline-body">
 						
 						<?php echo 'Transferido por: <b>' . $item->usuario->persona->getApellidoNombre() . '</b> ';?>
-						<?php $observacion = (!empty($item->observacion)) ? $item->observacion :'<span class="text-danger">sin completar</span>';
+						<?php $observacion = (!empty($item->observacion)) ? $item->observacion :'<span class="text-danger"><i>sin completar</i></span>';
 							echo '<br><span>Comentario<span>: <b>'.$observacion.'</b>'; ?>
 												
 						<?php if($item->id_historial_estado_orden_trabajo == $model->ultimoEstadoOrdenTrabajo->id_historial_estado_orden_trabajo){ ?>

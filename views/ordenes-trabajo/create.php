@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class = "card">
     <div class="card-header card-header-primary">
         <h4 class="card-title"><?= Html::encode($this->title) ?></h4>
-        <p class="card-category">Crear nueva orden de trabajo</p>
+        <p class="card-category"><?= isset($model->nro_orden_trabajo)?'Orden Nro: '.$model->nro_orden_trabajo : 'Crear nueva orden de trabajo' ?></p>
     </div>
     <div class="card-body">
         <?= $this->render('_form', [

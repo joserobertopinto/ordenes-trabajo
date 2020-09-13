@@ -8,9 +8,11 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\OrdenesTrabajo;
+use app\models\OrdenesTrabajoSearch;
 use app\models\Estado;
 use app\models\User;
 use app\common\utils\Permiso;
@@ -71,6 +73,15 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        /**
+         * timeline
+         */
+        // var_dump(Yii::$app->request->bodyParams);exit;
+        $searchModelHistorial = new OrdenesTrabajoSearch();
+        $dataProviderHistorial = $searchModelHistorial->timeSearch(Yii::$app->request->bodyParams);
+
+        /*************************************************** */
+
         $queryUsuario = '';
 
         if(Permiso::esUsuarioOperador())
@@ -133,6 +144,8 @@ class SiteController extends Controller
             'totalFinalizadasParcial'   => $totalFinalizadasParcial,
             'dataProviderAsignadas'     => $dataProviderAsignadas,
             'dataProviderFinalizadas'   => $dataProviderFinalizadas,
+            'searchModelHistorial'      => $searchModelHistorial,
+            'dataProviderHistorial'     => $dataProviderHistorial
         ]);
     }
 

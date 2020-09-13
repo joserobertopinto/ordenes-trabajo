@@ -139,6 +139,11 @@ class User extends \yii\db\ActiveRecord  implements IdentityInterface
         return \Yii::$app->user->identity->username;
     }
 
+    public static function getApellidoNombreByIdUser($id){
+        $user = self::findOne($id);
+        return $user->persona->getApellidoNombre();
+    }
+
     /**
      * @inheritdoc
      */
