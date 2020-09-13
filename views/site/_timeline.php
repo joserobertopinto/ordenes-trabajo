@@ -61,22 +61,19 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
                     ]
                 ])->label(false);
             }
-
+            
             echo $form->field($searchModelHistorial, 'fecha_hora_comienzo', 
                 [
-                    // 'addon'=>['prepend'=>['content'=>'<i class="fa fa-calendar-alt"></i>']],
+                    'addon'=>['prepend'=>['content'=>'<button type="button" id="button-clear-range"  class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span></button>']],
                     'options'=>['class'=>'drp-container form-group']
                 ]
                 )->widget(DateRangePicker::classname(), [
                     'convertFormat'=>true,
                     'pluginOptions' => ['locale' => ['format' => 'd/m/Y'],'allowClear'=>true],
                     //'useWithAddon'=>true
-                ])->label(false);
-
-
-            ActiveForm::end();
-
-        ?>
+                ])->label(false);?>
+        <?php ActiveForm::end();?>
 
     </div>
 </div>
@@ -147,6 +144,11 @@ $this->registerJs('
     });
 
     $(".applyBtn").on("click", function(){
+        $( "#id-sumit-filter" ).submit();
+    })
+
+    $("#button-clear-range").on("click", function(){
+        $("#ordenestrabajosearch-fecha_hora_comienzo").val("");
         $( "#id-sumit-filter" ).submit();
     })
     
