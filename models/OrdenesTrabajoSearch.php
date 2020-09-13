@@ -41,7 +41,7 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
      */
     public function search($params)
     {
-        $query = OrdenesTrabajo::find()->joinWith(['ultimoEstadoOrdenTrabajo', 'usuarioOrdenTrabajo']);
+        $query = OrdenesTrabajo::find()->joinWith(['ultimoEstadoOrdenTrabajo']);
 
         // add conditions that should always apply here
 
@@ -51,6 +51,8 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
                 'defaultOrder'=>['fecha_hora_creacion'=>SORT_DESC],
             ],
         ]);
+
+        $dataProvider->pagination = ['defaultPageSize' =>30];
 
         $this->load($params);
 
@@ -66,8 +68,7 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
             ->andFilterWhere(['=', 'id_tipo_trabajo', $this->id_tipo_trabajo])
             ->andFilterWhere(['=', 'id_inmueble', $this->id_inmueble]);
 
-        if(!empty($this->operadores))
-            $query->andWhere(['IN', 'usuario_orden_trabajo.id_usuario', $this->operadores]);
+
 
         if(!empty($this->estadoActual))
             $query->andWhere(['=', 'historial_estado_orden_trabajo.id_estado', $this->estadoActual]);
@@ -87,7 +88,12 @@ class OrdenesTrabajoSearch extends OrdenesTrabajo
          * agrego filtro operador
          */
         if(Permiso::esUsuarioOperador())
-            $query->andWhere(['=', 'usuario_orden_trabajo.id_usuario', \Yii::$app->user->getId()]);
+            $query->joinWith(['usuarioOrdenTrabajo'])
+            ->andWhere(['=', 'usuario_orden_trabajo.id_usuario', \Yii::$app->user->getId()]);
+
+        if(!empty($this->operadores))
+            $query->joinWith(['usuarioOrdenTrabajo'])
+            ->andWhere(['IN', 'usuario_orden_trabajo.id_usuario', $this->operadores]);
 
         /**
          * el estado borrador no lo ve por nadie
