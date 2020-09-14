@@ -275,6 +275,9 @@ class OrdenesTrabajoController extends Controller
         
         $model->id_historial_estado_orden_trabajo = $anteUltimoHistorial;
         
+        // if($ultimoHistorial->id_estado == Estado::ESTADO_FINALIZADO ||$ultimoHistorial->id_estado == Estado::ESTADO_FINALIZADO_PARCIAL)
+        //     $model->fecha_hora_finalizacion == NULL;
+
         if($model->save() && $ultimoHistorial->delete()){
             $this->_guardarModificacion($id,'Se vuelve la orden a estado: '.$model->ultimoEstadoOrdenTrabajo->estado->descripcion.', por el usuario '.Yii::$app->user->identity->username);
             $transaccion->commit();

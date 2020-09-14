@@ -192,6 +192,8 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
         
         if (empty($error)){
             $this->id_historial_estado_orden_trabajo = $historialOrden->id_historial_estado_orden_trabajo;
+            if($id_estado == Estado::ESTADO_FINALIZADO || $id_estado == Estado::ESTADO_FINALIZADO_PARCIAL)
+                $this->fecha_hora_finalizacion = date('Y-m-d h:i:s');
             
             if (!$this->save())
                 $error = 'No se pudo actualizar el Historial de la Orden.<BR>'.ModelUtil::aplanarErrores($this);

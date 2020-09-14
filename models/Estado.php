@@ -71,6 +71,9 @@ class Estado extends \yii\db\ActiveRecord
         }elseif ($this->id_estado == self::ESTADO_FINALIZADO){
             $color = 'alert alert-success';
 //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
+        }elseif ($this->id_estado == self::ESTADO_FINALIZADO_PARCIAL){
+            $color = 'alert alert-success';
+        //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
         }elseif ($this->id_estado == self::ESTADO_ANULADA){
             $color = 'alert alert-danger';
         //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
