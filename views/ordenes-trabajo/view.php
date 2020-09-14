@@ -4,6 +4,7 @@
   use yii\widgets\DetailView;
   use kartik\grid\GridView;
   use yii\helpers\Url;
+  use app\common\utils\Fecha;
 
 
   /* @var $this yii\web\View */
@@ -29,17 +30,45 @@
             <p class="card-category"><?= 'Orden Nro: '.$model->nro_orden_trabajo ?></p>
     </div>
         
-        <div class='card card-body'>
-            <?=
-            DetailView::widget([
-                'model' => $model,
-                'options' => [
+        <div class='card card-body' id="id_body_view">
+          <div class='row'>
+            <div class="col-md-12">
+              <?=
+                DetailView::widget([
+                  'options' => [
                     'class' => 'table detail-view table-custom'
-                ],
-                'attributes' => [
+                  ],
+                  'model' => $model,
+                  'attributes' => [
                     'descripcion:ntext',
-                    'fecha_hora_creacion',
-                    'fecha_hora_comienzo',
+                  ]
+                ]);
+              ?>
+            </div>
+          </div>
+            <div class="row">
+            <div class="col-md-6">
+              <?=
+                DetailView::widget([
+                  'model' => $model,
+                  'options' => [
+                    'class' => 'table detail-view table-custom'
+                  ],
+                  'attributes' => [
+                    [
+                      'attribute' => 'fecha_hora_creacion',
+                      'value'     => function($model){ return '<i class="material-icons">schedule</i>&nbsp;'.Fecha::convertir($model->fecha_hora_creacion);},
+                      'label'     => 'Fecha de Creación',
+                      'visible'   => (is_null($model->fecha_hora_creacion)) ? false : true,
+                      'format'    => 'raw'
+                    ],
+                    [
+                      'attribute' => 'fecha_hora_comienzo',
+                      'value'     => function($model){ return '<i class="material-icons">schedule</i>&nbsp;'.Fecha::convertir($model->fecha_hora_comienzo);},
+                      'label'     => 'Fecha de Comienzo',
+                      'visible'   => (is_null($model->fecha_hora_comienzo)) ? false : true,
+                      'format'    => 'raw'
+                    ],
                     [
                       'attribute' => 'id_usuario_asignado',
                       'value'     => $model->getAsignadoConEstilo(),
@@ -52,16 +81,31 @@
                       'label'     => 'Responsables de la tarea',
                       'format'    => 'raw'
                     ],
+                    ]
+                ]);
+              ?>
+            </div>
+            <div class="col-md-6">
+            <?=
+            DetailView::widget([
+                'model' => $model,
+                'options' => [
+                    'class' => 'table detail-view table-custom'
+                ],
+                'attributes' => [
+                    // 'descripcion:ntext',
                     [
                       'attribute' => 'fecha_hora_finalizacion',
-                      'value'     => $model->fecha_hora_finalizacion,
-                      'label'     => 'Estado Actual',
+                      'value'     => function($model){ return '<i class="material-icons">schedule</i>&nbsp;'.Fecha::convertir($model->fecha_hora_finalizacion);},
+                      'label'     => 'Fecha de Finalización',
                       'visible'   => (is_null($model->fecha_hora_finalizacion)) ? false : true,
+                      'format'    => 'raw'
                     ],
                     [
                         'attribute' => 'id_historial_estado_orden_trabajo',
-                        'value'     => $model->getDescripcionUltimoEstado(),
-                        'label'     => 'Estado Actual'
+                        'value'     => function($model){ return '<span class="badge '.$model->ultimoEstadoOrdenTrabajo->estado->colorBadge().'">'.$model->getDescripcionUltimoEstado().'</span>';},
+                        'label'     => 'Estado Actual',
+                        'format'    => 'raw'
                     ],
                     [
                         'attribute' => 'id_tipo_trabajo',
@@ -69,10 +113,14 @@
                     ],
                     [
                         'attribute' => 'id_inmueble',
-                        'value'     => $model->getDescripcionInmueble(),
+                        // 'value'     => $model->getDescripcionInmueble(),
+                        'value'     => function($model){ return '<i class="material-icons">store</i>&nbsp;'.$model->getDescripcionInmueble();},
+                        'format'    => 'raw'
                     ],
                 ],
             ]) ?>
+            </div>
+            </div>
         </div>
     </div>
 
@@ -149,3 +197,15 @@
   </div><!-- END CARD BODY TAB -->
   
 </div><!-- END DIV ordenes-trabajo-view -->
+
+<?php
+  $this->registerCss('
+    table th, table td{
+      border-color: white!important;
+    }
+    table tbody tr th {
+      font-weight: 500!important;
+      text-align: right;
+    }                    
+  ');
+?>

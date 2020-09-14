@@ -78,6 +78,33 @@ class Estado extends \yii\db\ActiveRecord
         return $color;
     }
 
+        /**
+     * color para cada estado
+     */
+    public function colorBadge() {
+       
+        if ($this->id_estado == self::ESTADO_BORRADOR){
+            $color = 'badge-warning';
+//             $classAndIcon["icon"] = "fa fa-balance-scale " . $classAndIcon['color'];
+        }
+        elseif ($this->id_estado == self::ESTADO_PENDIENTE){
+            $color = 'badge-info';
+//             $classAndIcon["icon"] = "fa fa-check-square-o " . $classAndIcon['color'];
+        }elseif ($this->id_estado == self::ESTADO_EN_PROGRESO){
+            $color = 'badge-primary';
+//             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
+        }elseif ($this->id_estado == self::ESTADO_FINALIZADO){
+            $color = 'badge-success';
+//             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
+        }elseif ($this->id_estado == self::ESTADO_FINALIZADO_PARCIAL){
+            $color = 'badge-success';
+    //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
+        }
+        
+        return $color;
+    }
+
+
     /**
     * 
     */
