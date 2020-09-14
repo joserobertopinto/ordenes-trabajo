@@ -133,6 +133,12 @@ $fecha_max = date("Y-m-d",strtotime($fecha_actual."+ 1 year"));
                             [
                                 'attribute' => 'nombre',
                                 'value'     => function($model){return $model->getDescargaHtmlLink();},
+                                'format'    => 'raw',
+                                'contentOptions' => ['style' => 'width:20%']
+                            ],
+                            [
+                                'attribute' => 'descripcion',
+                                // 'value'     => function($model){return $model->getDescargaHtmlLink();},
                                 'format'    => 'raw'
                             ],
 

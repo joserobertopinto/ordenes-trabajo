@@ -14,14 +14,17 @@
 
   \yii\web\YiiAsset::register($this);
   $urlEdit = Yii::$app->urlManager->createUrl(['ordenes-trabajo/update','id' => $model->id_ordenes_trabajo]);
-  $urlDelete = Yii::$app->urlManager->createUrl(['ordenes-trabajo/delete','id' => $model->id_ordenes_trabajo]);
+  $urlDelete = Yii::$app->urlManager->createUrl(['ordenes-trabajo/anular','id' => $model->id_ordenes_trabajo]);
 ?>
 <div class="ordenes-trabajo-view">
     <div class='card'>
     <div class="card-header-info">
             <h4 class="card-title"><?= strtoupper(Html::encode($model->titulo)) ?>
                 <?php if($model->puedeEditarOrden()){ ?>
-                  <button class="btn-header-card" rel=<?= $urlEdit ?> type="button" title="Eliminar Orden"><i class="material-icons">delete</i></button>
+                  <?= Html::a('<i class="material-icons">highlight_off</i></i>',
+                  $urlDelete,
+                  ['title'=>Yii::t('app', 'Anular Orden'), 'class' => 'btn-header-card']).'&nbsp'; ?>
+
                   <?= Html::a('<i class="material-icons">edit</i></i>',
                   $urlEdit,
                   ['title'=>Yii::t('app', 'Editar Orden'), 'class' => 'btn-header-card']); ?>
@@ -176,7 +179,8 @@
                             [
                                 'attribute' => 'nombre',
                                 'value'     => function($model){return $model->getDescargaHtmlLink();},
-                                'format'    => 'raw'
+                                'format'    => 'raw',
+                                'contentOptions' => ['style' => 'width:20%']
                             ],
                             'descripcion',
                         ],

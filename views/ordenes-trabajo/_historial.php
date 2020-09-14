@@ -58,7 +58,8 @@ $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto"
 						<?php $observacion = (!empty($item->observacion)) ? $item->observacion :'<span class="text-danger"><i>sin completar</i></span>';
 							echo '<br><span>Comentario<span>: <b>'.$observacion.'</b>'; ?>
 												
-						<?php if($item->id_historial_estado_orden_trabajo == $model->ultimoEstadoOrdenTrabajo->id_historial_estado_orden_trabajo){ ?>
+						<?php if($item->id_historial_estado_orden_trabajo == $model->ultimoEstadoOrdenTrabajo->id_historial_estado_orden_trabajo &&
+								$model->ultimoEstadoOrdenTrabajo->id_estado != Estado::ESTADO_ANULADA){ ?>
 							<?php if($item->showEditarComentario()){ ?>
 								<?php 
 									PopoverX::begin([

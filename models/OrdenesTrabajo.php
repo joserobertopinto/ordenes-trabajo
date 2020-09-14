@@ -357,7 +357,7 @@ class OrdenesTrabajo extends \yii\db\ActiveRecord
      public function puedeEditarOrden(){
         $salida = false;
         
-        if(Permiso::puedeEditarOrden())
+        if(Permiso::puedeEditarOrden()&& $this->ultimoEstadoOrdenTrabajo->id_estado != Estado::ESTADO_ANULADA)
             $salida = true;
 
         return $salida;

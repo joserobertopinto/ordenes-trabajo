@@ -8,6 +8,7 @@ use app\models\TipoTrabajo;
 use app\models\OrdenesTrabajo;
 use app\common\utils\Fecha;
 use kartik\daterange\DateRangePicker;
+use app\common\utils\Permiso;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\OrdenesTrabajoSearch */
@@ -23,9 +24,9 @@ $urlNew = Yii::$app->urlManager->createUrl(['ordenes-trabajo/create']);
     <div class="card-header-primary">
             <h4 class="card-title">
                 Ordenes de Trabajo
-                <?= Html::a('<i class="material-icons">library_add</i>',
+                <?= (Permiso::esUsuarioSupervisor()) ? Html::a('<i class="material-icons">library_add</i>',
                 $urlNew,
-                ['title'=>Yii::t('app', 'Nueva Orden'), 'class' => 'btn-header-card']); ?>
+                ['title'=>Yii::t('app', 'Nueva Orden'), 'class' => 'btn-header-card']): ''; ?>
             
             </h4>
             <p class="card-category">Lista</p>

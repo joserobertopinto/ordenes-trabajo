@@ -38,7 +38,7 @@ class OrdenesTrabajoController extends Controller
         		'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['update','create','index','view','operadores-ajax', 'pasar','volver', 'tomar-tarea'],
+                        'actions' => ['update','create','index','view','operadores-ajax', 'pasar','volver', 'tomar-tarea','anular'],
                         'allow' => true,
                         'roles' => ['@']
                     ],
@@ -290,6 +290,34 @@ class OrdenesTrabajoController extends Controller
         
         return json_encode($response);
         
+    }
+
+        /**
+     * vuelvo tarea a estado anterior
+     */
+    public function actionAnular($id){
+        
+        $ok = true;
+        $model = $this->findModel($id);
+        
+        $transaccion= yii::$app->db->beginTransaction();
+        
+        $error  = ($model->pasarEstado(Estado::ESTADO_ANULADA));
+                
+        if(empty($error)){
+            
+            $this->_guardarModificacion($model->id_ordenes_trabajo,'Se anula orden '.$model->nro_orden_trabajo.', por el usuario '.Yii::$app->user->identity->username);
+
+            $transaccion->commit();
+
+            Yii::$app->session->addFlash('success', 'Estado de la orden actualizado');
+            
+        }else{
+            $transaccion->rollback();
+            Yii::$app->session->addFlash('danger', 'No se pudo actualizar estado de la orden');
+        }
+
+        return $this->redirect(['view', 'id' => $model->id_ordenes_trabajo]);
     }
 
      /**

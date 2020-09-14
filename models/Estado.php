@@ -17,6 +17,7 @@ class Estado extends \yii\db\ActiveRecord
     const ESTADO_EN_PROGRESO        = '45077e45-8a78-4b4d-9abb-c7e6c9fb3d07';	//EN PROGRESO
     const ESTADO_FINALIZADO         = '27ab5c71-a7b4-411b-bba4-4d4a98efcfc0';	//FINALIZADO
     const ESTADO_FINALIZADO_PARCIAL = 'cac4692d-9d34-4509-beb8-f0799c5fb256';	//FINALIZADO_PARCIAL
+    const ESTADO_ANULADA            = 'a7e665d8-e653-4a6f-89a4-e40916f5a3ef';   //ANULADA
 
     public $orden = [0 => self::ESTADO_PENDIENTE, 1 => self::ESTADO_EN_PROGRESO,  2 => self::ESTADO_FINALIZADO,  3 => self::ESTADO_FINALIZADO_PARCIAL];
 
@@ -70,9 +71,9 @@ class Estado extends \yii\db\ActiveRecord
         }elseif ($this->id_estado == self::ESTADO_FINALIZADO){
             $color = 'alert alert-success';
 //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
-        }elseif ($this->id_estado == self::ESTADO_FINALIZADO_PARCIAL){
-            $color = 'alert alert-success';
-    //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
+        }elseif ($this->id_estado == self::ESTADO_ANULADA){
+            $color = 'alert alert-danger';
+        //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
         }
         
         return $color;
@@ -98,7 +99,10 @@ class Estado extends \yii\db\ActiveRecord
 //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
         }elseif ($this->id_estado == self::ESTADO_FINALIZADO_PARCIAL){
             $color = 'badge-success';
-    //             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
+//             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
+        }elseif ($this->id_estado == self::ESTADO_ANULADA){
+            $color = 'badge-danger';
+//             $classAndIcon['icon'] = "fa fa-file-text-o " . $classAndIcon['color'];
         }
         
         return $color;

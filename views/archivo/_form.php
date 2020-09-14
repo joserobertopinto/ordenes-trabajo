@@ -80,6 +80,7 @@ use kartik\alert\Alert;
                     $("#archivoModal").modal("show");
                     if(json.ok)
                         $("#archivo-descripcion").val("");
+                    return false;
                 },
                 cache: false,
                 contentType: false,
